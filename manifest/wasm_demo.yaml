@@ -2,12 +2,13 @@ specVersion: 0.1.0
 description: Demo WASM substreams
 
 protoFiles:
-  - ./proto/erc20.proto
-  - ./proto/codec_eth.proto
+  - /Users/eduardvoiculescu/git/streamingFast/substreams-template/proto/erc20.proto
+  - /Users/eduardvoiculescu/git/streamingFast/substreams-template/proto/codec_eth.proto
 
 modules:
   - name: block_to_hello_world # name of the module which will be specified in the cli
     kind: map # this is a map (stateless execution)
+    startBlock: 14440000 # start block to here the mapper will start
     code:
       type: wasm/rust-v1 # we are running rust code embedded in wasm
       file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm # path to our wasm binary
@@ -15,7 +16,7 @@ modules:
     inputs:
       - source: sf.ethereum.type.v1.Block
     output:
-      type: proto:pb.eth.TransactionTrace # returned value by the map
+      type: proto:dfuse.ethereum.codec.v1.TransactionTrace # returned value by the map
 
   - name: erc_20_transfer
     kind: map
