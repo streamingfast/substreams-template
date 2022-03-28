@@ -1,0 +1,20 @@
+[package]
+name = "substreams-template"
+version = "0.1.0"
+description = "Substream template demo project"
+edition = "2021"
+repository = "https://github.com/streamingfast/substreams-template"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2.79"
+prost = { version = "0.6" }
+prost-types = "0.6"
+substreams={ git = "https://github.com/streamingfast/substreams", module="rust/substreams", branch="develop" }
+hex = "0.4.3"
+num-bigint = "0.4"
+
+[build-dependencies]
+prost-build = "0.6"
