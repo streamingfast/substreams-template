@@ -14,15 +14,18 @@ modules:
       file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm # path to our wasm binary
       entrypoint: map_hello_world # method which holds the same name and will be executed
     inputs:
-      - source: sf.ethereum.type.v1.Block
+      - source: sf.ethereum.type.v1.Block # Block required as an input
     output:
       type: proto:dfuse.ethereum.codec.v1.TransactionTrace # returned value by the map
 
-  - name: erc_20_transfer
+  - name: block_to_erc_20_transfer
     kind: map
+    startBlock: 14440000
     code:
-      type: wasm/rust-v1 # we are running rust code embedded in wasm
+      type: wasm/rust-v1
       file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm
       entrypoint: map_erc_20_transfer
+    inputs:
+      - source: sf.ethereum.type.v1.Block
     output:
       type: proto:eth.erc20.v1.Transfers
