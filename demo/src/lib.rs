@@ -2,7 +2,7 @@ mod pb;
 mod utils;
 
 use num_bigint::BigUint;
-use substreams::{log, proto};
+use substreams::{log, proto, state};
 
 /// Say hello to every first transaction in of a transaction from a block
 ///
@@ -28,7 +28,7 @@ pub extern "C" fn map_hello_world(block_ptr: *mut u8, block_len: usize) {
     }
 }
 
-//todo: use erc20-transfer and not pancake stuff
+//todo: use erc20-transfer
 // have an example of the fetching the number of transfers by block
 // maybe an example of the number (counter) of unique contracts in a block (bnb, weth, etc?)
 
@@ -46,8 +46,6 @@ pub extern "C" fn map_hello_world(block_ptr: *mut u8, block_len: usize) {
 pub extern "C" fn map_erc_20_transfer(block_ptr: *mut u8, block_len: usize) {
     // register panic hook to forward any panic to the executable
     substreams::register_panic_hook();
-
-    log::println("SALUT".to_string());
 
     // decode the block in the heap by using decode_ptr method from substreams lib
     let block: pb::eth::Block = proto::decode_ptr(block_ptr, block_len).unwrap();
@@ -91,5 +89,21 @@ pub extern "C" fn map_erc_20_transfer(block_ptr: *mut u8, block_len: usize) {
 
     // output transfers
     substreams::output(transfers);
+}
+
+#[no_mangle]
+pub extern "C" fn build_erc_20_transfer_state(transfers_ptr: *mut u8, transfers_len: usize) {
+    // register panic hook to forward any panic to the executable
+    substreams::register_panic_hook();
+
+    // decode the transfers in the heap by using decode_ptr method from substreams lib
+    let transfers: pb::erc20::Transfers = proto::decode_ptr(transfers_ptr, transfers_len).unwrap();
+
+    // loop over every transfer
+    for transfer in transfers.transfers {
+
+        // store the transfer in the store
+        state::set(transfer.log_ordinal as i64, format!("transfer:{},{}", transfer.from, transfer.to),proto::encode(&transfer).unwrap())
+    }
 }
 

@@ -29,3 +29,16 @@ modules:
       - source: sf.ethereum.type.v1.Block
     output:
       type: proto:eth.erc20.v1.Transfers
+
+  # A store does not have any output as it's tasked to store the data
+  - name: erc_20_transfer
+    kind: store
+    statBlock: 14440000
+    updatePolicy: replace
+    valueType: bytes
+    code:
+      type: wasm/rust-v1
+      file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm
+      entrypoint: build_erc_20_transfer_state
+    inputs:
+      - map: block_to_erc_20_transfer # we can also take a map as an input of a module
