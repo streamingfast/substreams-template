@@ -1,0 +1,18 @@
+# Ignore rust specific files
+/demo/Cargo.lock
+
+# Ignore proto auto-generated files
+/demo/src/pb/*
+/demo/target/
+
+# Ignore substreams-alpha executable
+substreams-alpha
+
+# IDE stuff
+.idea
+
+# Block stuff
+/localblocks/
+/localdata/
+/localirr/
+/rpc-cache/
