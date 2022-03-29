@@ -11,7 +11,7 @@ modules:
     startBlock: 14440000
     code:
       type: wasm/rust-v1
-      file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm
+      file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
       entrypoint: map_hello_world
     inputs:
       - source: sf.ethereum.type.v1.Block
@@ -23,7 +23,7 @@ modules:
     startBlock: 14440000
     code:
       type: wasm/rust-v1
-      file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm
+      file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
       entrypoint: map_erc_20_transfer
     inputs:
       - source: sf.ethereum.type.v1.Block
@@ -37,7 +37,7 @@ modules:
     valueType: bytes
     code:
       type: wasm/rust-v1
-      file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm
+      file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
       entrypoint: build_erc_20_transfer_state
     inputs:
       - map: block_to_erc_20_transfer
@@ -47,7 +47,7 @@ modules:
     startBlock: 14440000
     code:
       type: wasm/rust-v1
-      file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm
+      file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
       entrypoint: map_erc_20_transfer_per_hour
     inputs:
       - source: sf.ethereum.type.v1.Block

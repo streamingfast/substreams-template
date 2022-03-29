@@ -1,12 +1,15 @@
 # Ignore rust specific files
-/demo/Cargo.lock
+/Cargo.lock
 
 # Ignore proto auto-generated files
-/demo/src/pb/*
-/demo/target/
+/src/pb/*
+/target/
 
 # Ignore substreams-alpha executable
 substreams-alpha
+
+# pkg
+/pkg/
 
 # IDE stuff
 .idea
