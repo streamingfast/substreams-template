@@ -23,16 +23,6 @@ pub extern "C" fn map_hello_world(block_ptr: *mut u8, block_len: usize) {
     }
 }
 
-//todo: use erc20-transfer
-// have an example of the fetching the number of transfers by block
-// maybe an example of the number (counter) of unique contracts in a block (bnb, weth, etc?)
-
-/*
-    1. get erc20 transfer => Done
-    2. store state ^^ => todo
-    3. number of transfer per hour => todo
-*/
-
 /// Find and output all the ERC20 transfers
 ///
 /// `block_ptr`: Pointer of where the block is located in the wasm heap memory
@@ -75,6 +65,10 @@ pub extern "C" fn map_erc_20_transfer(block_ptr: *mut u8, block_len: usize) {
     substreams::output(transfers);
 }
 
+/// Build the erc 20 transfer store
+///
+/// `transfers_ptr`: Pointer of where the transfers are located in the wasm heap memory
+/// `transfers_len`: Length of the transfers in wasm heap memory
 #[no_mangle]
 pub extern "C" fn build_erc_20_transfer_state(transfers_ptr: *mut u8, transfers_len: usize) {
     substreams::register_panic_hook();
@@ -86,13 +80,47 @@ pub extern "C" fn build_erc_20_transfer_state(transfers_ptr: *mut u8, transfers_
     }
 }
 
+/// Gets a counter of the number of transfers in a given transfers object (which is set by block)
+///
+/// `transfers_ptr`: Pointer of where the transfers are located in the wasm heap memory
+/// `transfers_len`: Length of the transfers in wasm heap memory
 #[no_mangle]
-pub extern "C" fn map_erc_20_transfer_per_hour(block_ptr: *mut u8, block_len: usize) {
+pub extern "C" fn map_number_of_transfers_erc_20_transfer(transfers_ptr: *mut u8, transfers_len: usize) {
     substreams::register_panic_hook();
 
-    let block: pb::eth::Block = proto::decode_ptr(block_ptr, block_len).unwrap();
+    let transfers: pb::erc20::Transfers = proto::decode_ptr(transfers_ptr, transfers_len).unwrap();
 
-    for trx in block.transaction_traces {
+    let counter: pb::counter::Counter = pb::counter::Counter {
+        number_of_transfers: transfers.transfers.len() as u64,
+    };
 
+    log::println(format!("Number of transfers: {}", counter.number_of_transfers));
+
+    substreams::output(counter);
+}
+
+/// Find and output all the contract created
+///
+/// `block_ptr`: Pointer of where the block is located in the wasm heap memory
+/// `block_len`: Length of the block in wasm heap memory
+#[no_mangle]
+pub extern "C" fn map_contract_creation(block_ptr: *mut u8, block_len: usize) {
+    substreams::register_panic_hook();
+
+    let mut contracts = pb::contract::Contracts { contracts: vec![] };
+    let blk: pb::eth::Block = proto::decode_ptr(block_ptr, block_len).unwrap();
+
+    for trx in blk.transaction_traces {
+        for call in trx.calls {
+            if call.call_type == pb::eth::CallType::Create as i32 && !call.state_reverted {
+                let contract = pb::contract::Contract {
+                    address: call.address
+                };
+
+                contracts.contracts.push(contract);
+            }
+        }
     }
+
+    substreams::output(contracts);
 }

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package eth.contract.v1;
+
+message Contracts {
+  repeated Contract contracts = 1;
+}
+
+message Contract {
+  bytes address = 1;
+}

@@ -42,14 +42,26 @@ modules:
     inputs:
       - map: block_to_erc_20_transfer
 
-  - name: erc_20_transfer_per_hour
+  - name: erc_20_transfers
     kind: map
     startBlock: 14440000
     code:
       type: wasm/rust-v1
       file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
-      entrypoint: map_erc_20_transfer_per_hour
+      entrypoint: map_number_of_transfers_erc_20_transfer
+    inputs:
+      - map: block_to_erc_20_transfer
+    output:
+      type: proto:eth.counter.v1.Counter
+
+  - name: created_contracts
+    kind: map
+    startBlock: 14440000
+    code:
+      type: wasm/rust-v1
+      file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
+      entrypoint: map_contract_creation
     inputs:
       - source: sf.ethereum.type.v1.Block
     output:
-      type: proto:eth.erc20.v1.Transfers # note sure about this, maybe it should just be a number ? idk
+      type: proto:eth.contract.v1.Contracts
