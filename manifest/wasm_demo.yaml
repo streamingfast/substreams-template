@@ -6,17 +6,17 @@ protoFiles:
   - /Users/eduardvoiculescu/git/streamingFast/substreams-template/proto/codec_eth.proto
 
 modules:
-  - name: block_to_hello_world # name of the module which will be specified in the cli
-    kind: map # this is a map (stateless execution)
-    startBlock: 14440000 # start block to here the mapper will start
+  - name: block_to_hello_world
+    kind: map
+    startBlock: 14440000
     code:
-      type: wasm/rust-v1 # we are running rust code embedded in wasm
-      file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm # path to our wasm binary
-      entrypoint: map_hello_world # method which holds the same name and will be executed
+      type: wasm/rust-v1
+      file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm
+      entrypoint: map_hello_world
     inputs:
-      - source: sf.ethereum.type.v1.Block # Block required as an input
+      - source: sf.ethereum.type.v1.Block
     output:
-      type: proto:dfuse.ethereum.codec.v1.TransactionTrace # returned value by the map
+      type: proto:dfuse.ethereum.codec.v1.TransactionTrace
 
   - name: block_to_erc_20_transfer
     kind: map
@@ -30,10 +30,9 @@ modules:
     output:
       type: proto:eth.erc20.v1.Transfers
 
-  # A store does not have any output as it's tasked to store the data
   - name: erc_20_transfer
     kind: store
-    statBlock: 14440000
+    startBlock: 14440000
     updatePolicy: replace
     valueType: bytes
     code:
@@ -41,4 +40,16 @@ modules:
       file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm
       entrypoint: build_erc_20_transfer_state
     inputs:
-      - map: block_to_erc_20_transfer # we can also take a map as an input of a module
+      - map: block_to_erc_20_transfer
+
+  - name: erc_20_transfer_per_hour
+    kind: map
+    startBlock: 14440000
+    code:
+      type: wasm/rust-v1
+      file: ./demo/target/wasm32-unknown-unknown/release/substreams_template.wasm
+      entrypoint: map_erc_20_transfer_per_hour
+    inputs:
+      - source: sf.ethereum.type.v1.Block
+    output:
+      type: proto:eth.erc20.v1.Transfers # note sure about this, maybe it should just be a number ? idk
