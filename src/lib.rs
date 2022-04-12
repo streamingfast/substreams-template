@@ -76,7 +76,7 @@ pub extern "C" fn build_erc_20_transfer_state(transfers_ptr: *mut u8, transfers_
     let transfers: pb::erc20::Transfers = proto::decode_ptr(transfers_ptr, transfers_len).unwrap();
 
     for transfer in transfers.transfers {
-        state::set(1, format!("transfer:{}:{}", transfer.from, transfer.to),proto::encode(&transfer).unwrap())
+        state::set(1, format!("transfer:{}:{}", transfer.from, transfer.to), &proto::encode(&transfer).unwrap())
     }
 }
 
