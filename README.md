@@ -4,5 +4,3 @@
 ## Overview
 
 This repo contains a template that you clone to bootstrap a new StreamingFast Substream from scratch.
-
-

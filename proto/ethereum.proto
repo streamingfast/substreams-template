@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package dfuse.ethereum.codec.v1;
+package sf.ethereum.type.v1;
 
 import "google/protobuf/timestamp.proto";
 

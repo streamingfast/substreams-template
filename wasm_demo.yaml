@@ -1,9 +1,5 @@
 specVersion: 0.1.0
-description: Demo WASM substreams
-
-protoFiles:
-  - ./proto/erc20.proto
-  - ./proto/codec_eth.proto
+description: Your substream(s) description here
 
 modules:
   - name: block_to_hello_world
@@ -16,7 +12,7 @@ modules:
     inputs:
       - source: sf.ethereum.type.v1.Block
     output:
-      type: proto:dfuse.ethereum.codec.v1.TransactionTrace
+      type: proto:sf.ethereum.codec.v1.TransactionTrace
 
   - name: block_to_erc_20_transfer
     kind: map

@@ -1,11 +1,5 @@
-# Ignore rust specific files
-/Cargo.lock
-
 # Ignore proto auto-generated files
 /target/
-
-# Ignore substreams-alpha executable
-substreams-alpha
 
 # pkg
 /pkg/

@@ -1,10 +1,10 @@
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Contracts {
     #[prost(message, repeated, tag="1")]
-    pub contracts: ::std::vec::Vec<Contract>,
+    pub contracts: ::prost::alloc::vec::Vec<Contract>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Contract {
-    #[prost(bytes, tag="1")]
-    pub address: std::vec::Vec<u8>,
+    #[prost(bytes="vec", tag="1")]
+    pub address: ::prost::alloc::vec::Vec<u8>,
 }
