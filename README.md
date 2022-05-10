@@ -18,7 +18,7 @@ You will need:
 If you don't want to install all the dependencies, you can use a pre-built image:
 
 ```
-docker run -it --rm -v `pwd`:/substreams --entrypoint '' g bash -c 'cd /substreams && ./build.sh'
+docker run -it --rm -v `pwd`:/substreams --entrypoint '' ghcr.io/streamingfast/substreams:develop bash -c 'cd /substreams && ./build.sh'
 ```
 
 ### Running
