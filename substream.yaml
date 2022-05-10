@@ -12,7 +12,7 @@ modules:
     inputs:
       - source: sf.ethereum.type.v1.Block
     output:
-      type: proto:sf.ethereum.codec.v1.TransactionTrace
+      type: proto:sf.ethereum.type.v1.TransactionTrace
 
   - name: block_to_erc_20_transfer
     kind: map

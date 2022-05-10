@@ -1,14 +1,4 @@
-# Ignore proto auto-generated files
-/target/
-
-# pkg
-/pkg/
-
-# IDE stuff
+.vscode
 .idea
 
-# Block stuff
-/localblocks/
-/localdata/
-/localirr/
-/rpc-cache/
+/target

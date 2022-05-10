@@ -1,8 +1,8 @@
 use crate::pb;
 
 use hex;
-use std::str;
 use num_bigint::BigUint;
+use std::str;
 
 /// keccak value for Transfer(address,address,uint256)
 const TRANSFER_TOPIC: &str = "ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
@@ -34,7 +34,10 @@ pub fn is_erc20transfer_event(log: &pb::eth::Log) -> bool {
 /// `holder`: Address of the holder (sender or the receiver)
 ///
 /// returns `Vec<BalanceChange`: List of balance changes for a given holder
-pub fn find_erc20_storage_changes(call: &pb::eth::Call, holder: &Vec<u8>) -> Vec<pb::erc20::BalanceChange> {
+pub fn find_erc20_storage_changes(
+    call: &pb::eth::Call,
+    holder: &Vec<u8>,
+) -> Vec<pb::erc20::BalanceChange> {
     let mut out: Vec<pb::erc20::BalanceChange> = Vec::new();
     let keys = erc20storage_keys_from_address(call, holder);
 
@@ -48,7 +51,7 @@ pub fn find_erc20_storage_changes(call: &pb::eth::Call, holder: &Vec<u8>) -> Vec
 
                 let erc20_balance_change = &pb::erc20::BalanceChange {
                     old_balance,
-                    new_balance
+                    new_balance,
                 };
 
                 out.push(erc20_balance_change.clone())
