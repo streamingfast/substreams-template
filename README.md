@@ -13,6 +13,14 @@ You will need:
 ./build.sh
 ```
 
+#### Using Docker
+
+If you don't want to install all the dependencies, you can use a pre-built image:
+
+```
+docker run -it --rm -v `pwd`:/substreams --entrypoint '' g bash -c 'cd /substreams && ./build.sh'
+```
+
 ### Running
 
 You will need:
