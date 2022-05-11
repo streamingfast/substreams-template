@@ -15,6 +15,11 @@ pub extern "C" fn map_hello_world(block_ptr: *mut u8, block_len: usize) {
     let blk: pb::eth::Block = proto::decode_ptr(block_ptr, block_len).unwrap();
 
     for trx in blk.transaction_traces {
+        if trx.status != pb::eth::TransactionTraceStatus::Succeeded as i32 {
+            // Only log successful transactions
+            continue;
+        }
+
         log::println(format!(
             "Hello, transaction sender: {}",
             utils::address_pretty(trx.from.as_slice())
@@ -39,39 +44,44 @@ pub extern "C" fn map_erc_20_transfer(block_ptr: *mut u8, block_len: usize) {
 
     let block: pb::eth::Block = proto::decode_ptr(block_ptr, block_len).unwrap();
 
-    let mut transfers = pb::erc20::Transfers { transfers: vec![] };
-
+    let mut transfers: Vec<pb::erc20::Transfer> = vec![];
     for trx in block.transaction_traces {
         for call in trx.calls {
-            for log in call.clone().logs {
-                if !utils::is_erc20transfer_event(&log) {
-                    continue;
-                }
-
-                // get required values to create transfer event
-                let from_addr = &Vec::from(&log.topics[1][12..]);
-                let to_addr = &Vec::from(&log.topics[2][12..]);
-                let amount = &log.data[0..32];
-                let log_ordinal = log.index as u64;
-
-                let transfer_event = pb::erc20::Transfer {
-                    from: utils::address_pretty(from_addr.as_slice()),
-                    to: utils::address_pretty(to_addr.as_slice()),
-                    amount: BigUint::from_bytes_le(amount).to_string(),
-                    balance_change_from: utils::find_erc20_storage_changes(
-                        &call.clone(),
-                        from_addr,
-                    ),
-                    balance_change_to: utils::find_erc20_storage_changes(&call.clone(), to_addr),
-                    log_ordinal,
-                };
-
-                transfers.transfers.push(transfer_event);
+            if call.state_reverted {
+                // If the call has been reverted, we should not map anything here
+                continue;
             }
+
+            transfers.extend(
+                call.logs
+                    .iter()
+                    .filter(|log| utils::is_erc20transfer_event(log))
+                    .map(|log| {
+                        let from_addr = &Vec::from(&log.topics[1][12..]);
+                        let to_addr = &Vec::from(&log.topics[2][12..]);
+                        let amount = &log.data[0..32];
+                        let log_ordinal = log.index as u64;
+
+                        pb::erc20::Transfer {
+                            from: utils::address_pretty(from_addr.as_slice()),
+                            to: utils::address_pretty(to_addr.as_slice()),
+                            amount: BigUint::from_bytes_le(amount).to_string(),
+                            balance_change_from: utils::find_erc20_storage_changes(
+                                &call.clone(),
+                                from_addr,
+                            ),
+                            balance_change_to: utils::find_erc20_storage_changes(
+                                &call.clone(),
+                                to_addr,
+                            ),
+                            log_ordinal,
+                        }
+                    }),
+            );
         }
     }
 
-    substreams::output(transfers);
+    substreams::output(pb::erc20::Transfers { transfers });
 }
 
 /// Build the erc 20 transfer store
@@ -126,20 +136,21 @@ pub extern "C" fn map_number_of_transfers_erc_20_transfer(
 pub extern "C" fn map_contract_creation(block_ptr: *mut u8, block_len: usize) {
     substreams::register_panic_hook();
 
-    let mut contracts = pb::contract::Contracts { contracts: vec![] };
     let blk: pb::eth::Block = proto::decode_ptr(block_ptr, block_len).unwrap();
 
+    let mut contracts: Vec<pb::contract::Contract> = vec![];
     for trx in blk.transaction_traces {
-        for call in trx.calls {
-            if call.call_type == pb::eth::CallType::Create as i32 && !call.state_reverted {
-                let contract = pb::contract::Contract {
-                    address: call.address,
-                };
-
-                contracts.contracts.push(contract);
-            }
-        }
+        contracts.extend(
+            trx.calls
+                .iter()
+                .filter(|call| {
+                    call.call_type == pb::eth::CallType::Create as i32 && !call.state_reverted
+                })
+                .map(|call| pb::contract::Contract {
+                    address: call.address.clone(),
+                }),
+        );
     }
 
-    substreams::output(contracts);
+    substreams::output(pb::contract::Contracts { contracts: vec![] });
 }
