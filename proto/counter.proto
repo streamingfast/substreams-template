@@ -3,5 +3,5 @@ syntax = "proto3";
 package eth.counter.v1;
 
 message Counter {
-    uint64 numberOfTransfers = 1;
+    uint64 transfer_count = 1;
 }

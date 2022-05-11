@@ -10,12 +10,12 @@ message Transfer {
   string from = 1;
   string to = 2;
   string amount = 3;
-  repeated BalanceChange balanceChangeFrom = 4;
-  repeated BalanceChange balanceChangeTo = 5;
-  uint64 LogOrdinal = 6;
+  repeated BalanceChange balance_change_from = 4;
+  repeated BalanceChange balance_change_to = 5;
+  uint64 log_ordinal = 6;
 }
 
 message BalanceChange {
-  string oldBalance = 1;
-  string newBalance = 2;
+  string old_balance = 1;
+  string new_balance = 2;
 }
