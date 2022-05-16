@@ -20,14 +20,11 @@ pub extern "C" fn map_hello_world(block_ptr: *mut u8, block_len: usize) {
             continue;
         }
 
-        log::println(format!(
-            "Hello, transaction sender: {}",
-            utils::address_pretty(trx.from.as_slice())
-        ));
-        log::println(format!(
-            "Hello, transaction receiver: {}",
+        log::info!(
+            "Hello, transaction from {} to {}",
+            utils::address_pretty(trx.from.as_slice()),
             utils::address_pretty(trx.to.as_slice())
-        ));
+        );
 
         substreams::output(trx);
         break;
@@ -120,7 +117,7 @@ pub extern "C" fn map_number_of_transfers_erc_20_transfer(
         transfer_count: transfers.transfers.len() as u64,
     };
 
-    log::println(format!("Transfer count {}", counter.transfer_count));
+    log::debug!("Transfer count {}", counter.transfer_count);
 
     substreams::output(counter);
 }
