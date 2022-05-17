@@ -1,20 +1,12 @@
 use crate::pb;
 
-use hex;
+use hex_literal::hex;
 use num_bigint::BigUint;
-use std::str;
+use substreams::Hex;
 
 /// keccak value for Transfer(address,address,uint256)
-const TRANSFER_TOPIC: &str = "ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
-
-/// Encodes an array of bytes in hex
-///
-/// `input`: Bytes
-///
-/// returns `String`: hex encoded input
-pub fn address_pretty(input: &[u8]) -> String {
-    format!("0x{}", hex::encode(input))
-}
+const TRANSFER_TOPIC: [u8; 32] =
+    hex!("ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef");
 
 /// Checks if the given log is an erc20 transfer event by check the keccak value of the log topic
 ///
@@ -25,7 +17,7 @@ pub fn is_erc20transfer_event(log: &pb::eth::Log) -> bool {
     if log.topics.len() != 3 || log.data.len() != 32 {
         return false;
     }
-    return hex::encode(&log.topics[0]) == TRANSFER_TOPIC;
+    return log.topics[0] == TRANSFER_TOPIC;
 }
 
 /// Find the erc20 storage changes (new and old valance of given holder)
@@ -42,7 +34,7 @@ pub fn find_erc20_storage_changes(
     let keys = erc20storage_keys_from_address(call, holder);
 
     for key in keys {
-        let byte_key = hex::decode(key).unwrap();
+        let byte_key = Hex::decode(key).unwrap();
 
         for change in &call.storage_changes {
             if change.key.eq(&byte_key) {
@@ -70,7 +62,7 @@ pub fn find_erc20_storage_changes(
 /// returns `Vec<String>`: List of hashes of keccak preimages
 fn erc20storage_keys_from_address(call: &pb::eth::Call, addr: &Vec<u8>) -> Vec<String> {
     let mut out: Vec<String> = Vec::new();
-    let addr_as_hex = hex::encode(addr);
+    let addr_as_hex = Hex::encode(addr);
     for (hash, pre_image) in &call.keccak_preimages {
         if pre_image.chars().count() != 128 {
             continue;

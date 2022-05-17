@@ -2,7 +2,7 @@ mod pb;
 mod utils;
 
 use num_bigint::BigUint;
-use substreams::{log, proto, state};
+use substreams::{log, proto, state, Hex};
 
 /// Say hello to every first transaction in of a transaction from a block
 ///
@@ -22,8 +22,8 @@ pub extern "C" fn map_hello_world(block_ptr: *mut u8, block_len: usize) {
 
         log::info!(
             "Hello, transaction from {} to {}",
-            utils::address_pretty(trx.from.as_slice()),
-            utils::address_pretty(trx.to.as_slice())
+            Hex(&trx.from),
+            Hex(&trx.to)
         );
 
         substreams::output(trx);
@@ -60,17 +60,13 @@ pub extern "C" fn map_erc_20_transfer(block_ptr: *mut u8, block_len: usize) {
                         let log_ordinal = log.index as u64;
 
                         pb::erc20::Transfer {
-                            from: utils::address_pretty(from_addr.as_slice()),
-                            to: utils::address_pretty(to_addr.as_slice()),
+                            from: Hex::encode(from_addr),
+                            to: Hex::encode(to_addr),
                             amount: BigUint::from_bytes_le(amount).to_string(),
                             balance_change_from: utils::find_erc20_storage_changes(
-                                &call.clone(),
-                                from_addr,
+                                &call, from_addr,
                             ),
-                            balance_change_to: utils::find_erc20_storage_changes(
-                                &call.clone(),
-                                to_addr,
-                            ),
+                            balance_change_to: utils::find_erc20_storage_changes(&call, to_addr),
                             log_ordinal,
                         }
                     }),
