@@ -1,19 +1,13 @@
 mod pb;
 mod utils;
-
 use num_bigint::BigUint;
-use substreams::{log, proto, state, Hex};
+use substreams::{log, proto, state, Hex, errors::SubstreamError};
 
 /// Say hello to every first transaction in of a transaction from a block
 ///
-/// `block_ptr`: Pointer of where the block is located in the wasm heap memory
-/// `block_len`: Length of the block in wasm heap memory
-#[no_mangle]
-pub extern "C" fn map_hello_world(block_ptr: *mut u8, block_len: usize) {
-    substreams::register_panic_hook();
-
-    let blk: pb::eth::Block = proto::decode_ptr(block_ptr, block_len).unwrap();
-
+/// `blk`: Ethereum block
+#[substreams::handler(type = "map")]
+fn map_hello_world(blk: pb::eth::Block) -> Result<pb::eth::TransactionTrace, SubstreamError> {
     for trx in blk.transaction_traces {
         if trx.status != pb::eth::TransactionTraceStatus::Succeeded as i32 {
             // Only log successful transactions
@@ -26,23 +20,18 @@ pub extern "C" fn map_hello_world(block_ptr: *mut u8, block_len: usize) {
             Hex(&trx.to)
         );
 
-        substreams::output(trx);
-        break;
+        return Ok(trx);
     }
+    return Err(SubstreamError::new("block does not contain any transaction"))
 }
 
 /// Find and output all the ERC20 transfers
 ///
-/// `block_ptr`: Pointer of where the block is located in the wasm heap memory
-/// `block_len`: Length of the block in wasm heap memory
-#[no_mangle]
-pub extern "C" fn map_erc_20_transfer(block_ptr: *mut u8, block_len: usize) {
-    substreams::register_panic_hook();
-
-    let block: pb::eth::Block = proto::decode_ptr(block_ptr, block_len).unwrap();
-
+/// `blk`: Ethereum block
+#[substreams::handler(type = "map")]
+fn map_erc_20_transfer(blk: pb::eth::Block) -> Result<pb::erc20::Transfers, SubstreamError> {
     let mut transfers: Vec<pb::erc20::Transfer> = vec![];
-    for trx in block.transaction_traces {
+    for trx in blk.transaction_traces {
         for call in trx.calls {
             if call.state_reverted {
                 // If the call has been reverted, we should not map anything here
@@ -73,20 +62,14 @@ pub extern "C" fn map_erc_20_transfer(block_ptr: *mut u8, block_len: usize) {
             );
         }
     }
-
-    substreams::output(pb::erc20::Transfers { transfers });
+    Ok(pb::erc20::Transfers { transfers })
 }
 
 /// Build the erc 20 transfer store
 ///
-/// `transfers_ptr`: Pointer of where the transfers are located in the wasm heap memory
-/// `transfers_len`: Length of the transfers in wasm heap memory
-#[no_mangle]
-pub extern "C" fn build_erc_20_transfer_state(transfers_ptr: *mut u8, transfers_len: usize) {
-    substreams::register_panic_hook();
-
-    let transfers: pb::erc20::Transfers = proto::decode_ptr(transfers_ptr, transfers_len).unwrap();
-
+/// `transfers`: ERC20 transfers
+#[substreams::handler(type = "store")]
+fn build_erc_20_transfer_state(transfers: pb::erc20::Transfers) {
     for transfer in transfers.transfers {
         state::set(
             1,
@@ -98,36 +81,21 @@ pub extern "C" fn build_erc_20_transfer_state(transfers_ptr: *mut u8, transfers_
 
 /// Gets a counter of the number of transfers in a given transfers object (which is set by block)
 ///
-/// `transfers_ptr`: Pointer of where the transfers are located in the wasm heap memory
-/// `transfers_len`: Length of the transfers in wasm heap memory
-#[no_mangle]
-pub extern "C" fn map_number_of_transfers_erc_20_transfer(
-    transfers_ptr: *mut u8,
-    transfers_len: usize,
-) {
-    substreams::register_panic_hook();
-
-    let transfers: pb::erc20::Transfers = proto::decode_ptr(transfers_ptr, transfers_len).unwrap();
-
+/// `transfers`: ERC20 transfers
+#[substreams::handler(type = "map")]
+fn map_number_of_transfers_erc_20_transfer(transfers: pb::erc20::Transfers) -> Result<pb::counter::Counter, SubstreamError>{
     let counter: pb::counter::Counter = pb::counter::Counter {
         transfer_count: transfers.transfers.len() as u64,
     };
-
     log::debug!("Transfer count {}", counter.transfer_count);
-
-    substreams::output(counter);
+    Ok(counter)
 }
 
 /// Find and output all the contract created
 ///
-/// `block_ptr`: Pointer of where the block is located in the wasm heap memory
-/// `block_len`: Length of the block in wasm heap memory
-#[no_mangle]
-pub extern "C" fn map_contract_creation(block_ptr: *mut u8, block_len: usize) {
-    substreams::register_panic_hook();
-
-    let blk: pb::eth::Block = proto::decode_ptr(block_ptr, block_len).unwrap();
-
+/// `blk`: Ethereum block
+#[substreams::handler(type = "map")]
+fn map_contract_creation(blk: pb::eth::Block) -> Result<pb::contract::Contracts,SubstreamError>{
     let mut contracts: Vec<pb::contract::Contract> = vec![];
     for trx in blk.transaction_traces {
         contracts.extend(
@@ -142,5 +110,5 @@ pub extern "C" fn map_contract_creation(block_ptr: *mut u8, block_len: usize) {
         );
     }
 
-    substreams::output(pb::contract::Contracts { contracts: vec![] });
+    Ok(pb::contract::Contracts { contracts: vec![] })
 }
