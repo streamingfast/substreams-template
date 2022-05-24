@@ -32,5 +32,5 @@ substreams run mainnet.ethereum.streamingfast.io substream.yaml block_to_hello_w
 
 ## Next Steps
 
-Read the documentation at https://github.com/streamingfast/substreams-docs/blob/master/docs.
+Read the documentation at https://github.com/streamingfast/substreams under _Documentation_.
 
