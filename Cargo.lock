@@ -215,9 +215,9 @@ dependencies = [
 
 [[package]]
 name = "prost"
-version = "0.10.3"
+version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc03e116981ff7d8da8e5c220e374587b98d294af7ba7dd7fda761158f00086f"
+checksum = "71adf41db68aa0daaefc69bb30bcd68ded9b9abaad5d1fbb6304c4fb390e083e"
 dependencies = [
  "bytes",
  "prost-derive",
@@ -225,9 +225,9 @@ dependencies = [
 
 [[package]]
 name = "prost-build"
-version = "0.10.3"
+version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "65a1118354442de7feb8a2a76f3d80ef01426bd45542c8c1fdffca41a758f846"
+checksum = "8ae5a4388762d5815a9fc0dea33c56b021cdc8dde0c55e0c9ca57197254b0cab"
 dependencies = [
  "bytes",
  "cfg-if",
@@ -313,7 +313,7 @@ dependencies = [
 [[package]]
 name = "substreams"
 version = "0.1.0"
-source = "git+https://github.com/streamingfast/substreams?branch=develop#339fed96fe8ebdccc53a7b2eb1860833e186b8fe"
+source = "git+https://github.com/streamingfast/substreams?branch=develop#1cecae22ae2693460fa10a312eebbcefa13553db"
 dependencies = [
  "bigdecimal",
  "hex",
@@ -327,11 +327,12 @@ dependencies = [
 [[package]]
 name = "substreams-macro"
 version = "0.1.0"
-source = "git+https://github.com/streamingfast/substreams?branch=develop#339fed96fe8ebdccc53a7b2eb1860833e186b8fe"
+source = "git+https://github.com/streamingfast/substreams?branch=develop#1cecae22ae2693460fa10a312eebbcefa13553db"
 dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+ "thiserror",
 ]
 
 [[package]]
@@ -370,6 +371,26 @@ dependencies = [
  "redox_syscall",
  "remove_dir_all",
  "winapi",
+]
+
+[[package]]
+name = "thiserror"
+version = "1.0.31"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd829fe32373d27f76265620b5309d0340cb8550f523c1dda251d6298069069a"
+dependencies = [
+ "thiserror-impl",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "1.0.31"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0396bc89e626244658bef819e22d0cc459e795a5ebe878e6ec336d1674a8d79a"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

@@ -1,12 +1,12 @@
 mod pb;
 mod utils;
 use num_bigint::BigUint;
-use substreams::{log, proto, state, Hex, errors::SubstreamError};
+use substreams::{errors::SubstreamError, log, proto, store, Hex};
 
 /// Say hello to every first transaction in of a transaction from a block
 ///
 /// `blk`: Ethereum block
-#[substreams::handler(type = "map")]
+#[substreams::handlers::map]
 fn map_hello_world(blk: pb::eth::Block) -> Result<pb::eth::TransactionTrace, SubstreamError> {
     for trx in blk.transaction_traces {
         if trx.status != pb::eth::TransactionTraceStatus::Succeeded as i32 {
@@ -22,13 +22,15 @@ fn map_hello_world(blk: pb::eth::Block) -> Result<pb::eth::TransactionTrace, Sub
 
         return Ok(trx);
     }
-    return Err(SubstreamError::new("block does not contain any transaction"))
+    return Err(SubstreamError::new(
+        "block does not contain any transaction",
+    ));
 }
 
 /// Find and output all the ERC20 transfers
 ///
 /// `blk`: Ethereum block
-#[substreams::handler(type = "map")]
+#[substreams::handlers::map]
 fn map_erc_20_transfer(blk: pb::eth::Block) -> Result<pb::erc20::Transfers, SubstreamError> {
     let mut transfers: Vec<pb::erc20::Transfer> = vec![];
     for trx in blk.transaction_traces {
@@ -68,10 +70,10 @@ fn map_erc_20_transfer(blk: pb::eth::Block) -> Result<pb::erc20::Transfers, Subs
 /// Build the erc 20 transfer store
 ///
 /// `transfers`: ERC20 transfers
-#[substreams::handler(type = "store")]
-fn build_erc_20_transfer_state(transfers: pb::erc20::Transfers) {
+#[substreams::handlers::store]
+fn build_erc_20_transfer_state(transfers: pb::erc20::Transfers, store: store::UpdateWriter) {
     for transfer in transfers.transfers {
-        state::set(
+        store.set(
             1,
             format!("transfer:{}:{}", transfer.from, transfer.to),
             &proto::encode(&transfer).unwrap(),
@@ -82,8 +84,10 @@ fn build_erc_20_transfer_state(transfers: pb::erc20::Transfers) {
 /// Gets a counter of the number of transfers in a given transfers object (which is set by block)
 ///
 /// `transfers`: ERC20 transfers
-#[substreams::handler(type = "map")]
-fn map_number_of_transfers_erc_20_transfer(transfers: pb::erc20::Transfers) -> Result<pb::counter::Counter, SubstreamError>{
+#[substreams::handlers::map]
+fn map_number_of_transfers_erc_20_transfer(
+    transfers: pb::erc20::Transfers,
+) -> Result<pb::counter::Counter, SubstreamError> {
     let counter: pb::counter::Counter = pb::counter::Counter {
         transfer_count: transfers.transfers.len() as u64,
     };
@@ -94,8 +98,8 @@ fn map_number_of_transfers_erc_20_transfer(transfers: pb::erc20::Transfers) -> R
 /// Find and output all the contract created
 ///
 /// `blk`: Ethereum block
-#[substreams::handler(type = "map")]
-fn map_contract_creation(blk: pb::eth::Block) -> Result<pb::contract::Contracts,SubstreamError>{
+#[substreams::handlers::map]
+fn map_contract_creation(blk: pb::eth::Block) -> Result<pb::contract::Contracts, SubstreamError> {
     let mut contracts: Vec<pb::contract::Contract> = vec![];
     for trx in blk.transaction_traces {
         contracts.extend(

@@ -1,5 +1,22 @@
-specVersion: 0.1.0
-description: Your substream(s) description here
+specVersion: v0.1.0
+package:
+  name: template
+  version: v0.5.0
+  url: https://github.com/streamingfast/substreams-template
+  doc: |
+    These substream modules compose all the things to build up the PancakeSwap substreams.
+    See individual modules docs for help.
+
+protobuf:
+  files:
+    - google/protobuf/timestamp.proto
+    - google/protobuf/any.proto
+    - contract.proto
+    - counter.proto
+    - ethereum.proto
+    - erc20.proto
+  importPaths:
+    - ./proto
 
 modules:
   - name: block_to_hello_world
