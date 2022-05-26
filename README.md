@@ -27,7 +27,7 @@ You will need:
 - Substreams (https://github.com/streamingfast/substreams-docs/blob/master/docs/guides/quickstart.md#obtain-the-substreams-cli-tool)
 
 ```
-substreams run mainnet.ethereum.streamingfast.io substream.yaml block_to_hello_world
+substreams run -e mainnet.ethereum.streamingfast.io substream.yaml block_to_hello_world
 ```
 
 ## Next Steps
