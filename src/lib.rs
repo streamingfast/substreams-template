@@ -31,7 +31,7 @@ fn map_hello_world(blk: pb::eth::Block) -> Result<pb::eth::TransactionTrace, Sub
 ///
 /// `blk`: Ethereum block
 #[substreams::handlers::map]
-fn map_erc_20_transfer(blk: pb::eth::Block) -> Result<pb::erc20::Transfers, SubstreamError> {
+fn map_erc20_transfers(blk: pb::eth::Block) -> Result<pb::erc20::Transfers, SubstreamError> {
     let mut transfers: Vec<pb::erc20::Transfer> = vec![];
     for trx in blk.transaction_traces {
         for call in trx.calls {
@@ -71,7 +71,7 @@ fn map_erc_20_transfer(blk: pb::eth::Block) -> Result<pb::erc20::Transfers, Subs
 ///
 /// `transfers`: ERC20 transfers
 #[substreams::handlers::store]
-fn build_erc_20_transfer_state(transfers: pb::erc20::Transfers, store: store::UpdateWriter) {
+fn store_erc20_transfers(transfers: pb::erc20::Transfers, store: store::UpdateWriter) {
     for transfer in transfers.transfers {
         store.set(
             1,
@@ -85,7 +85,7 @@ fn build_erc_20_transfer_state(transfers: pb::erc20::Transfers, store: store::Up
 ///
 /// `transfers`: ERC20 transfers
 #[substreams::handlers::map]
-fn map_number_of_transfers_erc_20_transfer(
+fn count_erc20_transfers(
     transfers: pb::erc20::Transfers,
 ) -> Result<pb::counter::Counter, SubstreamError> {
     let counter: pb::counter::Counter = pb::counter::Counter {

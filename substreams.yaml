@@ -9,8 +9,6 @@ package:
 
 protobuf:
   files:
-    - google/protobuf/timestamp.proto
-    - google/protobuf/any.proto
     - contract.proto
     - counter.proto
     - ethereum.proto
@@ -18,62 +16,51 @@ protobuf:
   importPaths:
     - ./proto
 
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
+
 modules:
-  - name: block_to_hello_world
+  - name: map_hello_world
     kind: map
-    startBlock: 14440000
-    code:
-      type: wasm/rust-v1
-      file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
-      entrypoint: map_hello_world
+    initialBlock: 14440000
     inputs:
       - source: sf.ethereum.type.v1.Block
     output:
       type: proto:sf.ethereum.type.v1.TransactionTrace
 
-  - name: block_to_erc_20_transfer
+  - name: map_erc20_transfers
     kind: map
-    startBlock: 14440000
-    code:
-      type: wasm/rust-v1
-      file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
-      entrypoint: map_erc_20_transfer
+    initialBlock: 14440000
     inputs:
       - source: sf.ethereum.type.v1.Block
     output:
       type: proto:eth.erc20.v1.Transfers
 
-  - name: erc_20_transfer
+  - name: store_erc20_transfers
     kind: store
-    startBlock: 14440000
-    updatePolicy: replace
+    initialBlock: 14440000
+    updatePolicy: set
     valueType: bytes
     code:
       type: wasm/rust-v1
       file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
       entrypoint: build_erc_20_transfer_state
     inputs:
-      - map: block_to_erc_20_transfer
+      - map: map_erc20_transfers
 
-  - name: erc_20_transfers
+  - name: count_erc20_transfers
     kind: map
-    startBlock: 14440000
-    code:
-      type: wasm/rust-v1
-      file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
-      entrypoint: map_number_of_transfers_erc_20_transfer
+    initialBlock: 14440000
     inputs:
-      - map: block_to_erc_20_transfer
+      - map: map_erc20_transfers
     output:
       type: proto:eth.counter.v1.Counter
 
-  - name: created_contracts
+  - name: map_contract_creation
     kind: map
-    startBlock: 14440000
-    code:
-      type: wasm/rust-v1
-      file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
-      entrypoint: map_contract_creation
+    initialBlock: 14440000
     inputs:
       - source: sf.ethereum.type.v1.Block
     output:
