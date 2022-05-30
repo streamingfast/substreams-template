@@ -697,8 +697,9 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "substreams"
-version = "0.1.0"
-source = "git+https://github.com/streamingfast/substreams?branch=develop#9dca46bc9fa9f82ebcbdaf4a309fba40b1a1ebff"
+version = "0.0.8-beta"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ffca36169fa613b8f61b05c28028c5a3c560300b6cd64bfbf1a188096afc7223"
 dependencies = [
  "bigdecimal",
  "hex",
@@ -713,7 +714,7 @@ dependencies = [
 [[package]]
 name = "substreams-ethereum"
 version = "0.1.0"
-source = "git+https://github.com/streamingfast/substreams-ethereum?branch=develop#2440345b733c89e204b9ee0aa1ad49755224a5f2"
+source = "git+https://github.com/streamingfast/substreams-ethereum?branch=develop#bec0ce03ae6ab812c2b1128cf1a373b89c9301b4"
 dependencies = [
  "ethabi",
  "getrandom",
@@ -728,7 +729,7 @@ dependencies = [
 [[package]]
 name = "substreams-ethereum-abigen"
 version = "0.1.0"
-source = "git+https://github.com/streamingfast/substreams-ethereum?branch=develop#2440345b733c89e204b9ee0aa1ad49755224a5f2"
+source = "git+https://github.com/streamingfast/substreams-ethereum?branch=develop#bec0ce03ae6ab812c2b1128cf1a373b89c9301b4"
 dependencies = [
  "anyhow",
  "ethabi",
@@ -743,7 +744,7 @@ dependencies = [
 [[package]]
 name = "substreams-ethereum-derive"
 version = "0.1.0"
-source = "git+https://github.com/streamingfast/substreams-ethereum?branch=develop#2440345b733c89e204b9ee0aa1ad49755224a5f2"
+source = "git+https://github.com/streamingfast/substreams-ethereum?branch=develop#bec0ce03ae6ab812c2b1128cf1a373b89c9301b4"
 dependencies = [
  "ethabi",
  "heck",
@@ -756,8 +757,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-macro"
-version = "0.1.0"
-source = "git+https://github.com/streamingfast/substreams?branch=develop#9dca46bc9fa9f82ebcbdaf4a309fba40b1a1ebff"
+version = "0.0.8-beta"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0a089a4cb36faee397d693298f4c54fb719229de1517742d5267357f6bd55704"
 dependencies = [
  "proc-macro2",
  "quote",
