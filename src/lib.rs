@@ -1,118 +1,66 @@
+mod abi;
 mod pb;
-mod utils;
-use num_bigint::BigUint;
-use substreams::{errors::SubstreamError, log, proto, store, Hex};
+use hex_literal::hex;
+use pb::erc721;
+use substreams::{log, store, Hex};
+use substreams_ethereum::{pb::eth::v1 as eth, NULL_ADDRESS};
 
-/// Say hello to every first transaction in of a transaction from a block
-///
-/// `blk`: Ethereum block
+// Bored Ape Club Contract
+const TRACKED_CONTRACT: [u8; 20] = hex!("bc4ca0eda7647a8ab7c2061c2e118a18a936f13d");
+
+substreams_ethereum::init!();
+
+/// Extracts transfers events from the contract
 #[substreams::handlers::map]
-fn map_hello_world(blk: pb::eth::Block) -> Result<pb::eth::TransactionTrace, SubstreamError> {
+fn block_to_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::errors::Error> {
+    let mut transfers: Vec<erc721::Transfer> = vec![];
     for trx in blk.transaction_traces {
-        if trx.status != pb::eth::TransactionTraceStatus::Succeeded as i32 {
-            // Only log successful transactions
-            continue;
-        }
-
-        log::info!(
-            "Hello, transaction from {} to {}",
-            Hex(&trx.from),
-            Hex(&trx.to)
-        );
-
-        return Ok(trx);
-    }
-    return Err(SubstreamError::new(
-        "block does not contain any transaction",
-    ));
-}
-
-/// Find and output all the ERC20 transfers
-///
-/// `blk`: Ethereum block
-#[substreams::handlers::map]
-fn map_erc20_transfers(blk: pb::eth::Block) -> Result<pb::erc20::Transfers, SubstreamError> {
-    let mut transfers: Vec<pb::erc20::Transfer> = vec![];
-    for trx in blk.transaction_traces {
-        for call in trx.calls {
-            if call.state_reverted {
-                // If the call has been reverted, we should not map anything here
-                continue;
+        transfers.extend(trx.receipt.unwrap().logs.iter().filter_map(|log| {
+            if log.address != TRACKED_CONTRACT {
+                return None;
             }
 
-            transfers.extend(
-                call.logs
-                    .iter()
-                    .filter(|log| utils::is_erc20transfer_event(log))
-                    .map(|log| {
-                        let from_addr = &Vec::from(&log.topics[1][12..]);
-                        let to_addr = &Vec::from(&log.topics[2][12..]);
-                        let amount = &log.data[0..32];
-                        let log_ordinal = log.index as u64;
+            log::debug!("NFT Contract {} invoked", Hex(&TRACKED_CONTRACT));
 
-                        pb::erc20::Transfer {
-                            from: Hex::encode(from_addr),
-                            to: Hex::encode(to_addr),
-                            amount: BigUint::from_bytes_le(amount).to_string(),
-                            balance_change_from: utils::find_erc20_storage_changes(
-                                &call, from_addr,
-                            ),
-                            balance_change_to: utils::find_erc20_storage_changes(&call, to_addr),
-                            log_ordinal,
-                        }
-                    }),
-            );
+            if !abi::erc721::events::Transfer::match_log(log) {
+                return None;
+            }
+
+            let transfer = abi::erc721::events::Transfer::must_decode(log);
+
+            Some(erc721::Transfer {
+                trx_hash: trx.hash.clone(),
+                from: transfer.from,
+                to: transfer.to,
+                token_id: transfer.token_id.low_u64(),
+                ordinal: log.block_index as u64,
+            })
+        }));
+    }
+
+    Ok(erc721::Transfers { transfers })
+}
+
+/// Store the total balance of NFT tokens for the specific TRACKED_CONTRACT by holder
+#[substreams::handlers::store]
+fn nft_state(transfers: erc721::Transfers, s: store::StoreAddInt64) {
+    log::info!("NFT state builder");
+    for transfer in transfers.transfers {
+        if transfer.from != NULL_ADDRESS {
+            log::info!("Found a transfer out");
+
+            s.add(transfer.ordinal, generate_key(&transfer.from), -1);
+        }
+
+        if transfer.to != NULL_ADDRESS {
+            log::info!("Found a transfer in");
+
+            s.add(transfer.ordinal, generate_key(&transfer.to), 1);
         }
     }
-    Ok(pb::erc20::Transfers { transfers })
 }
 
-/// Build the erc 20 transfer store
-///
-/// `transfers`: ERC20 transfers
-#[substreams::handlers::store]
-fn store_erc20_transfers(transfers: pb::erc20::Transfers, store: store::UpdateWriter) {
-    for transfer in transfers.transfers {
-        store.set(
-            1,
-            format!("transfer:{}:{}", transfer.from, transfer.to),
-            &proto::encode(&transfer).unwrap(),
-        )
-    }
+fn generate_key(holder: &Vec<u8>) -> String {
+    return format!("total:{}:{}", Hex(holder), Hex(TRACKED_CONTRACT));
 }
 
-/// Gets a counter of the number of transfers in a given transfers object (which is set by block)
-///
-/// `transfers`: ERC20 transfers
-#[substreams::handlers::map]
-fn count_erc20_transfers(
-    transfers: pb::erc20::Transfers,
-) -> Result<pb::counter::Counter, SubstreamError> {
-    let counter: pb::counter::Counter = pb::counter::Counter {
-        transfer_count: transfers.transfers.len() as u64,
-    };
-    log::debug!("Transfer count {}", counter.transfer_count);
-    Ok(counter)
-}
-
-/// Find and output all the contract created
-///
-/// `blk`: Ethereum block
-#[substreams::handlers::map]
-fn map_contract_creation(blk: pb::eth::Block) -> Result<pb::contract::Contracts, SubstreamError> {
-    let mut contracts: Vec<pb::contract::Contract> = vec![];
-    for trx in blk.transaction_traces {
-        contracts.extend(
-            trx.calls
-                .iter()
-                .filter(|call| {
-                    call.call_type == pb::eth::CallType::Create as i32 && !call.state_reverted
-                })
-                .map(|call| pb::contract::Contract {
-                    address: call.address.clone(),
-                }),
-        );
-    }
-
-    Ok(pb::contract::Contracts { contracts: vec![] })
-}

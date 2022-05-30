@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package eth.counter.v1;
-
-message Counter {
-    uint64 transfer_count = 1;
-}

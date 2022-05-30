@@ -1,14 +1,10 @@
-use std::io::Result;
-fn main() -> Result<()> {
-    let mut prost_build = prost_build::Config::new();
-    prost_build.out_dir("./src/pb");
-    prost_build.compile_protos(
-        &[
-            "ethereum.proto",
-            "erc20.proto",
-            "counter.proto",
-            "contract.proto",
-        ],
-        &["./proto"],
-    )
+use anyhow::{Ok, Result};
+use substreams_ethereum::Abigen;
+
+fn main() -> Result<(), anyhow::Error> {
+    Abigen::new("ERC721", "abi/erc721.json")?
+        .generate()?
+        .write_to_file("src/abi/erc721.rs")?;
+
+    Ok(())
 }
