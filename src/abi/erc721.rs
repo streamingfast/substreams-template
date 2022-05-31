@@ -1,5 +1,4 @@
     const INTERNAL_ERR: &'static str = "`ethabi_derive` internal error";
-    /// Contract's functions.
     /// Contract's events.
     #[allow(dead_code)]
     pub mod events {
