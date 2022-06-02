@@ -12,7 +12,7 @@ substreams_ethereum::init!();
 
 /// Extracts transfers events from the contract
 #[substreams::handlers::map]
-fn block_to_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::errors::Error> {
+fn map_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::errors::Error> {
     let mut transfers: Vec<erc721::Transfer> = vec![];
     for trx in blk.transaction_traces {
         transfers.extend(trx.receipt.unwrap().logs.iter().filter_map(|log| {
@@ -43,7 +43,7 @@ fn block_to_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::
 
 /// Store the total balance of NFT tokens for the specific TRACKED_CONTRACT by holder
 #[substreams::handlers::store]
-fn nft_state(transfers: erc721::Transfers, s: store::StoreAddInt64) {
+fn store_transfers(transfers: erc721::Transfers, s: store::StoreAddInt64) {
     log::info!("NFT state builder");
     for transfer in transfers.transfers {
         if transfer.from != NULL_ADDRESS {
