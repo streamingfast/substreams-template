@@ -60,6 +60,12 @@ substreams -v
 version 0.0.5-beta3 (Commit 61cc596, Built 2022-05-09T19:35:11Z)
 ```
 
+## Generating Protobuf
+
+```bash
+substreams protogen ./substreams.yaml --exclude-paths="sf/ethereum,sf/substreams,google"
+```
+
 ## Compile
 
 At this point, we're ready to build our WASM binary and Protobuf definitions.
