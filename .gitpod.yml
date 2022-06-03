@@ -1,5 +1,4 @@
-image:
-  file: .gitpod.Dockerfile
+image: streamingfast/substreams-gitpod
 tasks:
   - before: |
       # Authenticate with the substreams server
