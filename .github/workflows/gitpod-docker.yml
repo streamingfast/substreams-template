@@ -5,8 +5,7 @@ on:
     tags:
       - "v*"
     branches:
-      - "main"
-      - "jannis/gitpod-docker-image"
+      - "develop"
 
 jobs:
   docker:
