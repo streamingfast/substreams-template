@@ -75,8 +75,8 @@ export PATH="`pwd`:$PATH"
 Ensure that `substreams` CLI works as expected:
 
 ```
-substreams --version
-substreams version 0.0.12 (Commit 7b30088, Built 2022-06-03T18:32:00Z)
+substreams -v
+version (...)
 ```
 
 ## Generating Protobuf
@@ -102,15 +102,18 @@ We're now ready to run our example Substream!
 > Don't forget to be at the root of the project to run the following commands
 
 ```bash
+# to run the map module
 substreams run -e api-dev.streamingfast.io:443 substreams.yaml map_transfers --start-block 12292922 --stop-block +1
-```
 
+# to run the store module (and the map module in the background)
+substreams run -e api-dev.streamingfast.io:443 substreams.yaml store_transfers --start-block 12292922 --stop-block +1
+```
 Let's break down everything happening above.
 
 - `substreams` is our executable
 - `-e api-dev.streamingfast.io:443` is the provider going to run our Substreams
 - `substream.yaml` is the path where we have defined our Substreams Manifest
-- `map_transfers` this is the module which we want to run, defined in the manifest
+- `map_transfers` (or `store_transfers`) this is the module which we want to run, defined in the manifest
 - `--start-block 12292922` start from block `12292922`
 - `--stop-block +1` only request a single block (stop block will be manifest's start block + 1)
 
