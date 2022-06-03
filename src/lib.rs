@@ -20,7 +20,7 @@ fn map_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::error
                 return None;
             }
 
-            log::debug!("NFT Contract {} invoked", Hex(&TRACKED_CONTRACT));
+            log::info!("NFT Contract {} invoked", Hex(&TRACKED_CONTRACT));
 
             if !abi::erc721::events::Transfer::match_log(log) {
                 return None;
@@ -47,14 +47,12 @@ fn store_transfers(transfers: erc721::Transfers, s: store::StoreAddInt64) {
     log::info!("NFT state builder");
     for transfer in transfers.transfers {
         if transfer.from != NULL_ADDRESS {
-            log::info!("Found a transfer out");
-
+            log::info!("Found a transfer out {}", Hex(&transfer.trx_hash));
             s.add(transfer.ordinal, generate_key(&transfer.from), -1);
         }
 
         if transfer.to != NULL_ADDRESS {
-            log::info!("Found a transfer in");
-
+            log::info!("Found a transfer in {}", Hex(&transfer.trx_hash));
             s.add(transfer.ordinal, generate_key(&transfer.to), 1);
         }
     }

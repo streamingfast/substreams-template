@@ -24,10 +24,21 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env # to configure your current shell
 ```
 
-### Install Protocol Buffer compiler
+### Protobuf
 
-You will also need to install protocol buffer compiler. Again, there are multiple ways on how to do it. Here is the official documentation of [protocol buffer compiler](https://grpc.io/docs/protoc-installation/).
+#### Install `protoc`
+protoc is a Protocol Buffer compiler. It is needed to generate code for Rust and other languages, out of the protobuf definitions you will create or get through third-party Substreams packages.
 
+There are multiple ways on how to do it. Here is the official documentation of [protocol buffer compiler](https://grpc.io/docs/protoc-installation/).
+
+#### Install `protoc-gen-prost`
+
+This tool helps you render Rust structures out of protobuf definitions, for use in your Substreams modules. It is called by protoc following their plugin system.
+Install it with:
+
+```bash
+  cargo install protoc-gen-prost
+```
 > If you forget to install `protoc`, when generating the definitions, you might see error about `cmake` not defined, this is a fallback when `protoc` is not found.
 
 ## Obtain the `substreams` CLI tool
