@@ -17,7 +17,6 @@ tasks:
         if [[ "$STREAMINGFAST_KEY" == "" ]]; then
             echo "***************************************************************************"
             echo "ERROR: you need to set the STREAMINGFAST_KEY environment variable in your gitpod settings. Get yourself a key from here: https://app.dfuse.io/"
-            echo "***************************************************************************"
-            exit 1
+            echo "***************************************************************************"            
         fi        
         cargo build --target wasm32-unknown-unknown --release
