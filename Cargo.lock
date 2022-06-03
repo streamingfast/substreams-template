@@ -697,12 +697,13 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "substreams"
-version = "0.0.8-beta"
+version = "0.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ffca36169fa613b8f61b05c28028c5a3c560300b6cd64bfbf1a188096afc7223"
+checksum = "1c204a4e230019ce60eb11f0a9561e9030eeb7dbc2c15bddd5ab9e58aa96b262"
 dependencies = [
  "bigdecimal",
  "hex",
+ "hex-literal",
  "num-bigint",
  "prost",
  "prost-build",
@@ -713,9 +714,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-ethereum"
-version = "0.1.0"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b7bfd6ff57491df421c75d2e9f95ac53d14a46c1830a1f2c0d2f43140302da0"
+checksum = "ce788a1c290e4261cc285347708bf4ff89f70dc6dd53b989b6549aeda8688035"
 dependencies = [
  "ethabi",
  "getrandom",
@@ -729,9 +730,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-ethereum-abigen"
-version = "0.1.0"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b9d640733ba8ad554be96cbeeb351e71d3e5f33c876df66bd33bdd63bf246987"
+checksum = "34c79991d319edbb22425a2577e8e46bcd02ccefdebd13e9e17062bfe84b8462"
 dependencies = [
  "anyhow",
  "ethabi",
@@ -746,9 +747,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-ethereum-derive"
-version = "0.1.0"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7719d87d4d0d2cd536d7ef667e285b2e13f3e8ba92e7899f8ea2fc40e58ac32d"
+checksum = "be0d31d0be5fa04846a77409d346371b6328a7e00afedbe4bc7f367151fc8fc4"
 dependencies = [
  "ethabi",
  "heck",
@@ -761,9 +762,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-macro"
-version = "0.0.8-beta"
+version = "0.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a089a4cb36faee397d693298f4c54fb719229de1517742d5267357f6bd55704"
+checksum = "6f0db235f75c362557d3ce78c481535b51a688e189a030dc2d8610d8b6526a20"
 dependencies = [
  "proc-macro2",
  "quote",
