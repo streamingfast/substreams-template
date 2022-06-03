@@ -1,14 +1,5 @@
 tasks:
   - before: |
-      if [[ "$STREAMINGFAST_KEY" == "" ]]; then
-        echo "***************************************************************************"
-        echo "***************************************************************************"
-        echo "ERROR: you need to set the STREAMINGFAST_KEY environment variable in your gitpod settings. Get yourself a key from here: https://app.dfuse.io/"'
-        echo "***************************************************************************"            
-        echo "***************************************************************************"            
-      fi        
-        
-      if [[ -n "$STREAMINGFAST_KEY" ]]; then
         # Install the buf cli
         wget https://github.com/bufbuild/buf/releases/download/v1.4.0/buf-Linux-x86_64
         sudo mv buf-Linux-x86_64 /usr/local/bin/buf && sudo chmod +x /usr/local/bin/buf
@@ -22,8 +13,5 @@ tasks:
 
         # Authenticate with the substreams server
         export SUBSTREAMS_API_TOKEN=$(curl https://auth.dfuse.io/v1/auth/issue -s --data-binary '{"api_key":"'$STREAMINGFAST_KEY'"}' | jq -r .token)
-      fi
     init: |
-      if [[ -n "$STREAMINGFAST_KEY" ]]; then
         cargo build --target wasm32-unknown-unknown --release
-      fi
