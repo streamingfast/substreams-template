@@ -1,5 +1,4 @@
 FROM gitpod/workspace-full:2022-05-08-14-31-53
-# FROM ghcr.io/streamingfast/substreams:c896ce0
 
 # Install the buf cli
 RUN wget https://github.com/bufbuild/buf/releases/download/v1.4.0/buf-Linux-x86_64
@@ -13,6 +12,3 @@ RUN rustup update stable
 
 # Install protoc-gen-prost
 RUN cargo install protoc-gen-prost
-
-# Authenticate with the substreams server
-ENTRYPOINT ["cargo", "build", "--target", "wasm32-unknown-unknown", "--release"]
