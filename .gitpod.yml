@@ -2,10 +2,6 @@ image:
   file: .gitpod.Dockerfile
 tasks:
   - before: |
-      # Install the buf cli
-      wget https://github.com/bufbuild/buf/releases/download/v1.4.0/buf-Linux-x86_64
-      sudo mv buf-Linux-x86_64 /usr/local/bin/buf && sudo chmod +x /usr/local/bin/buf
-
       # Authenticate with the substreams server
       export SUBSTREAMS_API_TOKEN=$(curl https://auth.dfuse.io/v1/auth/issue -s --data-binary '{"api_key":"'$STREAMINGFAST_KEY'"}' | jq -r .token)
     init: |
