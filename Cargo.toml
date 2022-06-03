@@ -12,7 +12,9 @@ crate-type = ["cdylib"]
 ethabi = "17.0"
 hex-literal = "0.3.4"
 prost = "0.10.1"
+# Use latest from https://crates.io/crates/substreams
 substreams = "0.0.8-beta"
+# Use latest from https://crates.io/crates/substreams-ethereum
 substreams-ethereum = "0.1.0"
 
 # Required so that ethabi > ethereum-types build correctly under wasm32-unknown-unknown
