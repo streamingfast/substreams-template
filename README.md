@@ -1,15 +1,21 @@
 # StreamingFast Substreams Template
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+## Quick Start (Gitpod)
 
-## Quick Start
-Use this quickstart guide to set up your environment to use Substreams locally NOW.
+Use these steps to conveniently open your repository in a Gitpod.
 
-### Clone the repo
-```bash 
-git clone git@github.com:streamingfast/substreams-template.git
-cd substreams-template
-```
+1. First, [copy this repository](https://github.com/streamingfast/substreams-template/generate).
+2. Grab a StreamingFast key from [https://app.dfuse.io/](https://app.dfuse.io/)
+3. Create a [Gitpod](https://gitpod.io) account
+4. Configure a `STREAMINGFAST_KEY` variable in your Gitpod account settings
+5. Open your repository as a [Gitpod workspace](https://gitpod.io/workspaces)
+
+## Quick Start (Locally)open
+
+Use this quickstart guide to set up your environment to use Substreams locally.
+
+First, [copy this repository](https://github.com/streamingfast/substreams-template/generate) and clone it.
 
 ## Install Dependencies
 
