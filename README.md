@@ -26,17 +26,11 @@ source $HOME/.cargo/env # to configure your current shell
 
 ### Protobuf
 
-#### Install `buf`
-`buf` is a Protocol Buffer cli based on protoc. It is needed to generate code for Rust and other languages, out of the protobuf definitions you will create or get through third-party Substreams packages.
+#### Install `protoc`
 
-* On OSX, install it with:
+protoc is a Protocol Buffer compiler. It is needed to generate code for Rust and other languages, out of the protobuf definitions you will create or get through third-party Substreams packages.
 
-```bash
-  brew install bufbuild/buf/buf
-```
-
-* Following this documentation for other platforms: https://docs.buf.build/installation
-
+There are multiple ways on how to do it. Here is the official documentation of [protocol buffer compiler](https://grpc.io/docs/protoc-installation/).
 
 #### Install `protoc-gen-prost`
 
@@ -46,6 +40,7 @@ Install it with:
 ```bash
   cargo install protoc-gen-prost
 ```
+
 > If you forget to install `protoc`, when generating the definitions, you might see error about `cmake` not defined, this is a fallback when `protoc` is not found.
 
 ### Install `buf`
@@ -80,13 +75,8 @@ export PATH="`pwd`:$PATH"
 Ensure that `substreams` CLI works as expected:
 
 ```
-<<<<<<< Updated upstream
 substreams --version
 substreams version 0.0.12 (Commit 7b30088, Built 2022-06-03T18:32:00Z)
-=======
-substreams -v
-version (...)
->>>>>>> Stashed changes
 ```
 
 ## Generating Protobuf
@@ -112,15 +102,7 @@ We're now ready to run our example Substream!
 > Don't forget to be at the root of the project to run the following commands
 
 ```bash
-<<<<<<< Updated upstream
 substreams run -e api-dev.streamingfast.io:443 substreams.yaml map_transfers --start-block 12292922 --stop-block +1
-=======
-# to run the map module
-substreams run -e api-dev.streamingfast.io:443 substreams.yaml map_transfers --start-block 12292922 --stop-block +1
-
-# to run the store module (and the map module in the background)
-substreams run -e api-dev.streamingfast.io:443 substreams.yaml store_transfers --start-block 12292922 --stop-block +1
->>>>>>> Stashed changes
 ```
 
 Let's break down everything happening above.
@@ -128,11 +110,7 @@ Let's break down everything happening above.
 - `substreams` is our executable
 - `-e api-dev.streamingfast.io:443` is the provider going to run our Substreams
 - `substream.yaml` is the path where we have defined our Substreams Manifest
-<<<<<<< Updated upstream
 - `map_transfers` this is the module which we want to run, defined in the manifest
-=======
-- `map_transfers` (or `store_transfers`) this is the module which we want to run, defined in the manifest
->>>>>>> Stashed changes
 - `--start-block 12292922` start from block `12292922`
 - `--stop-block +1` only request a single block (stop block will be manifest's start block + 1)
 
