@@ -1,0 +1,22 @@
+tasks:
+  - before: |
+      if [[ "$STREAMINGFAST_KEY" == "" ]]; then
+        echo "ERROR: you need to set the STREAMINGFAST_KEY environment variable in your gitpod settings. Get yourself a key from here: https://app.dfuse.io/"
+        exit 1
+      fi
+
+      # Install the buf cli
+      wget https://github.com/bufbuild/buf/releases/download/v1.4.0/buf-Linux-x86_64
+      sudo mv buf-Linux-x86_64 /usr/local/bin/buf && sudo chmod +x /usr/local/bin/buf
+
+      # Install the substreams cli
+      wget -c https://github.com/streamingfast/substreams/releases/download/v0.0.12/substreams_0.0.12_linux_x86_64.tar.gz -O - | tar xzf - substreams
+      sudo mv substreams /usr/local/bin/substreams
+
+      # Install protoc-gen-prost
+      cargo install protoc-gen-prost
+
+      # Authenticate with the substreams server
+      export SUBSTREAMS_API_TOKEN=$(curl https://auth.dfuse.io/v1/auth/issue -s --data-binary '{"api_key":"'$STREAMINGFAST_KEY'"}' | jq -r .token)
+    init: |
+      cargo build --target wasm32-unknown-unknown --release
