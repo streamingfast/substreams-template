@@ -1,8 +1,16 @@
 tasks:
   - before: |
       if [[ "$STREAMINGFAST_KEY" == "" ]]; then
+        echo ""
+        echo ""
+        echo ""
+        echo ""
         echo "***************************************************************************"
-        echo "ERROR: you need to set the STREAMINGFAST_KEY environment variable in your gitpod settings. Get yourself a key from here: https://app.dfuse.io/"
+        echo "***************************************************************************"
+      
+        echo "ERROR: you need to set the STREAMINGFAST_KEY environment variable in your gitpod settings. Get yourself a key from here: https://app.dfuse.io/"'
+      
+        echo "***************************************************************************"            
         echo "***************************************************************************"            
       fi        
         
