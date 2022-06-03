@@ -26,10 +26,6 @@ source $HOME/.cargo/env # to configure your current shell
 
 ### Protobuf
 
-#### Install `[buf](https://docs.buf.build/introduction)
-
-Simply follow instructions given at https://docs.buf.build/installation.
-
 #### Install `protoc`
 
 protoc is a Protocol Buffer compiler. It is needed to generate code for Rust and other languages, out of the protobuf definitions you will create or get through third-party Substreams packages.
@@ -46,6 +42,12 @@ Install it with:
 ```
 
 > If you forget to install `protoc`, when generating the definitions, you might see error about `cmake` not defined, this is a fallback when `protoc` is not found.
+
+### Install `buf`
+
+[https://buf.build](https://buf.build) is a tool used to simplify the generation of typed structures in any language. It invokes `protoc` and simplifies a good number of things. Substreams packages are compatible with [buf Images](https://docs.buf.build/reference/images).
+
+See the [installation instructions here](https://docs.buf.build/installation).
 
 ## Obtain the `substreams` CLI tool
 
