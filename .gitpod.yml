@@ -1,4 +1,4 @@
-image: streamingfast/substreams-gitpod
+image: ghcr.io/streamingfast/substreams-gitpod:develop
 tasks:
   - before: |
       # Authenticate with the substreams server
