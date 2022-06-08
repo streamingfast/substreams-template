@@ -1,5 +1,6 @@
 mod abi;
 mod pb;
+mod graph;
 use hex_literal::hex;
 use pb::erc721;
 use substreams::{log, store, Hex};
@@ -58,7 +59,25 @@ fn store_transfers(transfers: erc721::Transfers, s: store::StoreAddInt64) {
     }
 }
 
+
+#[substreams::handlers::map]
+pub fn graph_entities(
+    block: substreams::pb::substreams::Clock,
+    transfers_deltas: store::Deltas,
+) -> Result<pb::graphdb::EntitiesChanges, substreams::errors::Error> {
+    log::info!(
+        "graph_entities: transfers deltas:{}",
+        transfers_deltas.len(),
+    );
+    let changes = graph::process(&block,transfers_deltas);
+    return Ok(changes);
+}
+
+
+
 fn generate_key(holder: &Vec<u8>) -> String {
     return format!("total:{}:{}", Hex(holder), Hex(TRACKED_CONTRACT));
 }
+
+
 
