@@ -56,7 +56,7 @@
             }
             pub fn decode(
                 log: &substreams_ethereum::pb::eth::v1::Log,
-            ) -> Result<Approval, String> {
+            ) -> Result<Self, String> {
                 Ok(Self {
                     owner: ethabi::decode(
                             &[ethabi::ParamType::Address],
@@ -100,7 +100,7 @@
                         .expect(INTERNAL_ERR),
                 })
             }
-            pub fn must_decode(log: &substreams_ethereum::pb::eth::v1::Log) -> Approval {
+            pub fn must_decode(log: &substreams_ethereum::pb::eth::v1::Log) -> Self {
                 match Self::decode(log) {
                     Ok(v) => v,
                     Err(e) => panic!("Unable to decode logs.Approval event: {:#}", e),
@@ -160,7 +160,7 @@
             }
             pub fn decode(
                 log: &substreams_ethereum::pb::eth::v1::Log,
-            ) -> Result<ApprovalForAll, String> {
+            ) -> Result<Self, String> {
                 let mut values = ethabi::decode(
                         &[ethabi::ParamType::Bool],
                         log.data.as_ref(),
@@ -202,9 +202,7 @@
                         .expect(INTERNAL_ERR),
                 })
             }
-            pub fn must_decode(
-                log: &substreams_ethereum::pb::eth::v1::Log,
-            ) -> ApprovalForAll {
+            pub fn must_decode(log: &substreams_ethereum::pb::eth::v1::Log) -> Self {
                 match Self::decode(log) {
                     Ok(v) => v,
                     Err(e) => {
@@ -266,7 +264,7 @@
             }
             pub fn decode(
                 log: &substreams_ethereum::pb::eth::v1::Log,
-            ) -> Result<Transfer, String> {
+            ) -> Result<Self, String> {
                 Ok(Self {
                     from: ethabi::decode(
                             &[ethabi::ParamType::Address],
@@ -310,7 +308,7 @@
                         .expect(INTERNAL_ERR),
                 })
             }
-            pub fn must_decode(log: &substreams_ethereum::pb::eth::v1::Log) -> Transfer {
+            pub fn must_decode(log: &substreams_ethereum::pb::eth::v1::Log) -> Self {
                 match Self::decode(log) {
                     Ok(v) => v,
                     Err(e) => panic!("Unable to decode logs.Transfer event: {:#}", e),
