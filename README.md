@@ -30,25 +30,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env # to configure your current shell
 ```
 
-### Protobuf
-
-#### Install `protoc`
-
-protoc is a Protocol Buffer compiler. It is needed to generate code for Rust and other languages, out of the protobuf definitions you will create or get through third-party Substreams packages.
-
-There are multiple ways on how to do it. Here is the official documentation of [protocol buffer compiler](https://grpc.io/docs/protoc-installation/).
-
-#### Install `protoc-gen-prost`
-
-This tool helps you render Rust structures out of protobuf definitions, for use in your Substreams modules. It is called by protoc following their plugin system.
-Install it with:
-
-```bash
-  cargo install protoc-gen-prost
-```
-
-> If you forget to install `protoc`, when generating the definitions, you might see error about `cmake` not defined, this is a fallback when `protoc` is not found.
-
 ### Install `buf`
 
 [https://buf.build](https://buf.build) is a tool used to simplify the generation of typed structures in any language. It invokes `protoc` and simplifies a good number of things. Substreams packages are compatible with [buf Images](https://docs.buf.build/reference/images).
@@ -68,7 +49,7 @@ brew install streamingfast/tap/substreams
 - Download the binary
 
 ```bash
-# Use correct binary for your platform
+# Use latest version and correct binary for your platform
 wget https://github.com/streamingfast/substreams/releases/download/v0.0.12/substreams_0.0.12_linux_x86_64.tar.gz
 tar -xzvf substreams_0.0.12_linux_x86_64.tar.gz
 export PATH="`pwd`:$PATH"
