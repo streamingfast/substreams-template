@@ -1,4 +1,4 @@
-image: ghcr.io/streamingfast/substreams-gitpod:develop
+image: ghcr.io/graphprotocol/substreams-gitpod:latest
 tasks:
   - command: |
       # Authenticate with the substreams server
