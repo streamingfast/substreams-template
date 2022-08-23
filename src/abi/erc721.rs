@@ -44,7 +44,7 @@
                 185u8,
                 37u8,
             ];
-            pub fn match_log(log: &substreams_ethereum::pb::eth::v1::Log) -> bool {
+            pub fn match_log(log: &substreams_ethereum::pb::eth::v2::Log) -> bool {
                 if log.topics.len() != 4usize {
                     return false;
                 }
@@ -55,17 +55,19 @@
                     == Self::TOPIC_ID;
             }
             pub fn decode(
-                log: &substreams_ethereum::pb::eth::v1::Log,
+                log: &substreams_ethereum::pb::eth::v2::Log,
             ) -> Result<Self, String> {
                 Ok(Self {
                     owner: ethabi::decode(
                             &[ethabi::ParamType::Address],
                             log.topics[1usize].as_ref(),
                         )
-                        .map_err(|e| format!(
-                            "unable to decode param 'owner' from topic of type 'address': {}",
-                            e
-                        ))?
+                        .map_err(|e| {
+                            format!(
+                                "unable to decode param 'owner' from topic of type 'address': {}",
+                                e
+                            )
+                        })?
                         .pop()
                         .expect(INTERNAL_ERR)
                         .into_address()
@@ -76,10 +78,12 @@
                             &[ethabi::ParamType::Address],
                             log.topics[2usize].as_ref(),
                         )
-                        .map_err(|e| format!(
-                            "unable to decode param 'approved' from topic of type 'address': {}",
-                            e
-                        ))?
+                        .map_err(|e| {
+                            format!(
+                                "unable to decode param 'approved' from topic of type 'address': {}",
+                                e
+                            )
+                        })?
                         .pop()
                         .expect(INTERNAL_ERR)
                         .into_address()
@@ -90,21 +94,28 @@
                             &[ethabi::ParamType::Uint(256usize)],
                             log.topics[3usize].as_ref(),
                         )
-                        .map_err(|e| format!(
-                            "unable to decode param 'token_id' from topic of type 'uint256': {}",
-                            e
-                        ))?
+                        .map_err(|e| {
+                            format!(
+                                "unable to decode param 'token_id' from topic of type 'uint256': {}",
+                                e
+                            )
+                        })?
                         .pop()
                         .expect(INTERNAL_ERR)
                         .into_uint()
                         .expect(INTERNAL_ERR),
                 })
             }
-            pub fn must_decode(log: &substreams_ethereum::pb::eth::v1::Log) -> Self {
-                match Self::decode(log) {
-                    Ok(v) => v,
-                    Err(e) => panic!("Unable to decode logs.Approval event: {:#}", e),
-                }
+        }
+        impl substreams_ethereum::Event for Approval {
+            const NAME: &'static str = "Approval";
+            fn match_log(log: &substreams_ethereum::pb::eth::v2::Log) -> bool {
+                Self::match_log(log)
+            }
+            fn decode(
+                log: &substreams_ethereum::pb::eth::v2::Log,
+            ) -> Result<Self, String> {
+                Self::decode(log)
             }
         }
         #[derive(Debug, Clone, PartialEq)]
@@ -148,7 +159,7 @@
                 108u8,
                 49u8,
             ];
-            pub fn match_log(log: &substreams_ethereum::pb::eth::v1::Log) -> bool {
+            pub fn match_log(log: &substreams_ethereum::pb::eth::v2::Log) -> bool {
                 if log.topics.len() != 3usize {
                     return false;
                 }
@@ -159,22 +170,25 @@
                     == Self::TOPIC_ID;
             }
             pub fn decode(
-                log: &substreams_ethereum::pb::eth::v1::Log,
+                log: &substreams_ethereum::pb::eth::v2::Log,
             ) -> Result<Self, String> {
                 let mut values = ethabi::decode(
                         &[ethabi::ParamType::Bool],
                         log.data.as_ref(),
                     )
                     .map_err(|e| format!("unable to decode log.data: {}", e))?;
+                values.reverse();
                 Ok(Self {
                     owner: ethabi::decode(
                             &[ethabi::ParamType::Address],
                             log.topics[1usize].as_ref(),
                         )
-                        .map_err(|e| format!(
-                            "unable to decode param 'owner' from topic of type 'address': {}",
-                            e
-                        ))?
+                        .map_err(|e| {
+                            format!(
+                                "unable to decode param 'owner' from topic of type 'address': {}",
+                                e
+                            )
+                        })?
                         .pop()
                         .expect(INTERNAL_ERR)
                         .into_address()
@@ -185,10 +199,12 @@
                             &[ethabi::ParamType::Address],
                             log.topics[2usize].as_ref(),
                         )
-                        .map_err(|e| format!(
-                            "unable to decode param 'operator' from topic of type 'address': {}",
-                            e
-                        ))?
+                        .map_err(|e| {
+                            format!(
+                                "unable to decode param 'operator' from topic of type 'address': {}",
+                                e
+                            )
+                        })?
                         .pop()
                         .expect(INTERNAL_ERR)
                         .into_address()
@@ -202,13 +218,16 @@
                         .expect(INTERNAL_ERR),
                 })
             }
-            pub fn must_decode(log: &substreams_ethereum::pb::eth::v1::Log) -> Self {
-                match Self::decode(log) {
-                    Ok(v) => v,
-                    Err(e) => {
-                        panic!("Unable to decode logs.ApprovalForAll event: {:#}", e)
-                    }
-                }
+        }
+        impl substreams_ethereum::Event for ApprovalForAll {
+            const NAME: &'static str = "ApprovalForAll";
+            fn match_log(log: &substreams_ethereum::pb::eth::v2::Log) -> bool {
+                Self::match_log(log)
+            }
+            fn decode(
+                log: &substreams_ethereum::pb::eth::v2::Log,
+            ) -> Result<Self, String> {
+                Self::decode(log)
             }
         }
         #[derive(Debug, Clone, PartialEq)]
@@ -252,7 +271,7 @@
                 179u8,
                 239u8,
             ];
-            pub fn match_log(log: &substreams_ethereum::pb::eth::v1::Log) -> bool {
+            pub fn match_log(log: &substreams_ethereum::pb::eth::v2::Log) -> bool {
                 if log.topics.len() != 4usize {
                     return false;
                 }
@@ -263,17 +282,19 @@
                     == Self::TOPIC_ID;
             }
             pub fn decode(
-                log: &substreams_ethereum::pb::eth::v1::Log,
+                log: &substreams_ethereum::pb::eth::v2::Log,
             ) -> Result<Self, String> {
                 Ok(Self {
                     from: ethabi::decode(
                             &[ethabi::ParamType::Address],
                             log.topics[1usize].as_ref(),
                         )
-                        .map_err(|e| format!(
-                            "unable to decode param 'from' from topic of type 'address': {}",
-                            e
-                        ))?
+                        .map_err(|e| {
+                            format!(
+                                "unable to decode param 'from' from topic of type 'address': {}",
+                                e
+                            )
+                        })?
                         .pop()
                         .expect(INTERNAL_ERR)
                         .into_address()
@@ -284,10 +305,12 @@
                             &[ethabi::ParamType::Address],
                             log.topics[2usize].as_ref(),
                         )
-                        .map_err(|e| format!(
-                            "unable to decode param 'to' from topic of type 'address': {}",
-                            e
-                        ))?
+                        .map_err(|e| {
+                            format!(
+                                "unable to decode param 'to' from topic of type 'address': {}",
+                                e
+                            )
+                        })?
                         .pop()
                         .expect(INTERNAL_ERR)
                         .into_address()
@@ -298,21 +321,28 @@
                             &[ethabi::ParamType::Uint(256usize)],
                             log.topics[3usize].as_ref(),
                         )
-                        .map_err(|e| format!(
-                            "unable to decode param 'token_id' from topic of type 'uint256': {}",
-                            e
-                        ))?
+                        .map_err(|e| {
+                            format!(
+                                "unable to decode param 'token_id' from topic of type 'uint256': {}",
+                                e
+                            )
+                        })?
                         .pop()
                         .expect(INTERNAL_ERR)
                         .into_uint()
                         .expect(INTERNAL_ERR),
                 })
             }
-            pub fn must_decode(log: &substreams_ethereum::pb::eth::v1::Log) -> Self {
-                match Self::decode(log) {
-                    Ok(v) => v,
-                    Err(e) => panic!("Unable to decode logs.Transfer event: {:#}", e),
-                }
+        }
+        impl substreams_ethereum::Event for Transfer {
+            const NAME: &'static str = "Transfer";
+            fn match_log(log: &substreams_ethereum::pb::eth::v2::Log) -> bool {
+                Self::match_log(log)
+            }
+            fn decode(
+                log: &substreams_ethereum::pb::eth::v2::Log,
+            ) -> Result<Self, String> {
+                Self::decode(log)
             }
         }
     }

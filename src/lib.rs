@@ -3,7 +3,7 @@ mod pb;
 use hex_literal::hex;
 use pb::erc721;
 use substreams::{log, store, Hex};
-use substreams_ethereum::{pb::eth::v1 as eth, NULL_ADDRESS};
+use substreams_ethereum::{pb::eth::v2 as eth, NULL_ADDRESS};
 
 // Bored Ape Club Contract
 const TRACKED_CONTRACT: [u8; 20] = hex!("bc4ca0eda7647a8ab7c2061c2e118a18a936f13d");
@@ -13,32 +13,22 @@ substreams_ethereum::init!();
 /// Extracts transfers events from the contract
 #[substreams::handlers::map]
 fn map_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::errors::Error> {
-    let mut transfers: Vec<erc721::Transfer> = vec![];
-    for trx in blk.transaction_traces {
-        transfers.extend(trx.receipt.unwrap().logs.iter().filter_map(|log| {
-            if log.address != TRACKED_CONTRACT {
-                return None;
-            }
+    Ok(erc721::Transfers {
+        transfers: blk
+            .events::<abi::erc721::events::Transfer>(&[&TRACKED_CONTRACT])
+            .map(|(transfer, log)| {
+                substreams::log::info!("NFT Transfer seen");
 
-            log::info!("NFT Contract {} invoked", Hex(&TRACKED_CONTRACT));
-
-            if !abi::erc721::events::Transfer::match_log(log) {
-                return None;
-            }
-
-            let transfer = abi::erc721::events::Transfer::must_decode(log);
-
-            Some(erc721::Transfer {
-                trx_hash: trx.hash.clone(),
-                from: transfer.from,
-                to: transfer.to,
-                token_id: transfer.token_id.low_u64(),
-                ordinal: log.block_index as u64,
+                erc721::Transfer {
+                    trx_hash: log.receipt.transaction.hash.clone(),
+                    from: transfer.from,
+                    to: transfer.to,
+                    token_id: transfer.token_id.low_u64(),
+                    ordinal: log.block_index() as u64,
+                }
             })
-        }));
-    }
-
-    Ok(erc721::Transfers { transfers })
+            .collect(),
+    })
 }
 
 /// Store the total balance of NFT tokens for the specific TRACKED_CONTRACT by holder
@@ -61,4 +51,3 @@ fn store_transfers(transfers: erc721::Transfers, s: store::StoreAddInt64) {
 fn generate_key(holder: &Vec<u8>) -> String {
     return format!("total:{}:{}", Hex(holder), Hex(TRACKED_CONTRACT));
 }
-
