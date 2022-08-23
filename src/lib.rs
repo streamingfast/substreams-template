@@ -34,7 +34,7 @@ fn map_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::error
 /// Store the total balance of NFT tokens for the specific TRACKED_CONTRACT by holder
 #[substreams::handlers::store]
 fn store_transfers(transfers: erc721::Transfers, s: store::StoreAddInt64) {
-    log::info!("NFT state builder");
+    log::info!("NFT holders state builder");
     for transfer in transfers.transfers {
         if transfer.from != NULL_ADDRESS {
             log::info!("Found a transfer out {}", Hex(&transfer.trx_hash));
