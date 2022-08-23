@@ -3,7 +3,11 @@ syntax = "proto3";
 package eth.database.v1;
 
 message EntitiesChanges {
-  repeated EntityChange entityChanges = 1;
+  uint64 blockNum = 1;
+  bytes blockHash = 2;
+  uint64 parentBlockNum = 3;
+  bytes parentBlockHash = 4;
+  repeated EntityChange entityChanges = 5;
 }
 
 message EntityChange {
