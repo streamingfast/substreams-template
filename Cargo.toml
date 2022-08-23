@@ -13,7 +13,7 @@ ethabi = "17.0"
 hex-literal = "0.3.4"
 prost = "^0.11.0"
 # Use latest from https://crates.io/crates/substreams
-substreams = "~0.0.19"
+substreams = "~0.0.20"
 # Use latest from https://crates.io/crates/substreams-ethereum
 substreams-ethereum = "~0.2.0"
 
