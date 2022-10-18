@@ -2,7 +2,8 @@ mod abi;
 mod pb;
 use hex_literal::hex;
 use pb::erc721;
-use substreams::{log, store, Hex};
+use substreams::prelude::*;
+use substreams::{log, store::StoreAddInt64, Hex};
 use substreams_ethereum::{pb::eth::v2 as eth, NULL_ADDRESS};
 
 // Bored Ape Club Contract
@@ -33,7 +34,7 @@ fn map_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::error
 
 /// Store the total balance of NFT tokens for the specific TRACKED_CONTRACT by holder
 #[substreams::handlers::store]
-fn store_transfers(transfers: erc721::Transfers, s: store::StoreAddInt64) {
+fn store_transfers(transfers: erc721::Transfers, s: StoreAddInt64) {
     log::info!("NFT holders state builder");
     for transfer in transfers.transfers {
         if transfer.from != NULL_ADDRESS {
