@@ -3,9 +3,6 @@ package:
   name: "substreams_template"
   version: v0.1.0
 
-imports:
-  eth: https://github.com/streamingfast/sf-ethereum/releases/download/v0.10.2/ethereum-v0.10.4.spkg
-
 protobuf:
   files:
     - erc721.proto
@@ -15,7 +12,7 @@ protobuf:
 binaries:
   default:
     type: wasm/rust-v1
-    file: ./target/wasm32-unknown-unknown/release/substreams_template.wasm
+    file: ./target/wasm32-unknown-unknown/release/substreams.wasm
 
 modules:
   - name: map_transfers

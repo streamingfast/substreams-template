@@ -24,7 +24,7 @@ fn map_transfers(blk: eth::Block) -> Result<erc721::Transfers, substreams::error
                     trx_hash: log.receipt.transaction.hash.clone(),
                     from: transfer.from,
                     to: transfer.to,
-                    token_id: transfer.token_id.low_u64(),
+                    token_id: transfer.token_id.to_u64(),
                     ordinal: log.block_index() as u64,
                 }
             })
