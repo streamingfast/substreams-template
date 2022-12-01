@@ -14,9 +14,9 @@ ethabi = "17"
 hex-literal = "0.3.4"
 prost = "0.11"
 # Use latest from https://crates.io/crates/substreams
-substreams = "0.4"
+substreams = "0.5"
 # Use latest from https://crates.io/crates/substreams-ethereum
-substreams-ethereum = "0.7"
+substreams-ethereum = "0.8"
 
 # Required so that ethabi > ethereum-types build correctly under wasm32-unknown-unknown
 [target.wasm32-unknown-unknown.dependencies]
@@ -24,7 +24,7 @@ getrandom = { version = "0.2", features = ["custom"] }
 
 [build-dependencies]
 anyhow = "1"
-substreams-ethereum = "0.7"
+substreams-ethereum = "0.8"
 
 [profile.release]
 lto = true
