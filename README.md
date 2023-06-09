@@ -19,7 +19,7 @@ First, [copy this repository](https://github.com/streamingfast/substreams-templa
 
 ## Install Dependencies
 
-Follow [Installation Requirements](https://substreams.streamingfast.io/developer-guide/installation-requirements#local-installation) instructions on official Substreams documentation wesite.
+Follow [Installation Requirements](https://substreams.streamingfast.io/getting-started/installing-the-cli) instructions on official Substreams documentation wesite.
 
 ### Validation
 
