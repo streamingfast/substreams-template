@@ -10,8 +10,8 @@ build:
 stream: build
 	substreams run -e $(ENDPOINT) substreams.yaml map_transfers -s $(START_BLOCK) -t $(STOP_BLOCK)
 
-.PHONY: codegen
-codegen:
+.PHONY: protogen
+protogen:
 	substreams protogen ./substreams.yaml --exclude-paths="sf/substreams,google"
 
 .PHONY: stream

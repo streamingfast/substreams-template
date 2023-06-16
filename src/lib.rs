@@ -1,7 +1,7 @@
 mod abi;
 mod pb;
 use hex_literal::hex;
-use pb::erc721;
+use pb::eth::erc721::v1 as erc721;
 use substreams::prelude::*;
 use substreams::{log, store::StoreAddInt64, Hex};
 use substreams_ethereum::{pb::eth::v2 as eth, NULL_ADDRESS};
