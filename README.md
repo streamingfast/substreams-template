@@ -46,7 +46,6 @@ cargo build --target wasm32-unknown-unknown --release
 
 The resulting WASM artifact will be found at `./target/wasm32-unknown-unknown/release/substreams.wasm`
 
-
 ## Get Substreams API token
 1. Grab a StreamingFast key from [https://app.streamingfast.io/](https://app.streamingfast.io/)
 2. Set `STREAMINGFAST_KEY` environment variable in your terminal
