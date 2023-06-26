@@ -46,6 +46,19 @@ cargo build --target wasm32-unknown-unknown --release
 
 The resulting WASM artifact will be found at `./target/wasm32-unknown-unknown/release/substreams.wasm`
 
+
+## Get Substreams API token
+1. Grab a StreamingFast key from [https://app.streamingfast.io/](https://app.streamingfast.io/)
+2. Set `STREAMINGFAST_KEY` environment variable in your terminal
+```bash
+export STREAMINGFAST_KEY=<your api key>
+```
+3. Request and set `SUBSTREAMS_API_TOKEN`
+  ```bash
+export SUBSTREAMS_API_TOKEN=$(curl https://auth.dfuse.io/v1/auth/issue -s --data-binary '{"api_key":"'$STREAMINGFAST_KEY'"}' | jq -r .token)
+  ```
+
+
 ## Run your Substream
 
 We're now ready to run our example Substream!
