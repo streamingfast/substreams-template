@@ -6,7 +6,7 @@
 Use these steps to conveniently open your repository in a Gitpod.
 
 1. First, [copy this repository](https://github.com/streamingfast/substreams-template/generate)
-2. Grab a StreamingFast key from [https://app.dfuse.io/](https://app.dfuse.io/)
+2. Grab a StreamingFast key from [https://app.streamingfast.io/](https://app.streamingfast.io/)
 3. Create a [Gitpod](https://gitpod.io) account
 4. Configure a `STREAMINGFAST_KEY` variable in your Gitpod account settings
 5. Open your repository as a [Gitpod workspace](https://gitpod.io/workspaces)
@@ -19,43 +19,7 @@ First, [copy this repository](https://github.com/streamingfast/substreams-templa
 
 ## Install Dependencies
 
-### Install Rust
-
-We're going to be using the [Rust programming language](https://www.rust-lang.org/), to develop some custom logic.
-
-There are [several ways to install Rust](https://www.rust-lang.org/tools/install), but for the sake of brevity:
-
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source $HOME/.cargo/env # to configure your current shell
-```
-
-### Install `buf`
-
-[https://buf.build](https://buf.build) is a tool used to simplify the generation of typed structures in any language. It invokes `protoc` and simplifies a good number of things. Substreams packages are compatible with [buf Images](https://docs.buf.build/reference/images).
-
-See the [installation instructions here](https://docs.buf.build/installation).
-
-## Obtain the `substreams` CLI tool
-
-### From `brew` (for Mac OS)
-
-```
-brew install streamingfast/tap/substreams
-```
-
-### From pre-compiled binary
-
-- Download the binary
-
-```bash
-# Use latest version and correct binary for your platform
-wget https://github.com/streamingfast/substreams/releases/download/v0.0.12/substreams_0.0.12_linux_x86_64.tar.gz
-tar -xzvf substreams_0.0.12_linux_x86_64.tar.gz
-export PATH="`pwd`:$PATH"
-```
-
-> Check https://github.com/streamingfast/substreams/releases and use the latest release available
+Follow [Installation Requirements](https://substreams.streamingfast.io/getting-started/installing-the-cli) instructions on official Substreams documentation wesite.
 
 ### Validation
 
@@ -69,7 +33,7 @@ version (...)
 ## Generating Protobuf
 
 ```bash
-substreams protogen ./substreams.yaml --exclude-paths="sf/ethereum,sf/substreams,google"
+substreams protogen ./substreams.yaml --exclude-paths="sf/substreams,google"
 ```
 
 ## Compile
@@ -80,7 +44,19 @@ At this point, we're ready to build our WASM binary and Protobuf definitions.
 cargo build --target wasm32-unknown-unknown --release
 ```
 
-The resulting WASM artifact will be found at `./target/wasm32-unknown-unknown/release/substreams_template.wasm`
+The resulting WASM artifact will be found at `./target/wasm32-unknown-unknown/release/substreams.wasm`
+
+## Get Substreams API token
+1. Grab a StreamingFast key from [https://app.streamingfast.io/](https://app.streamingfast.io/)
+2. Set `STREAMINGFAST_KEY` environment variable in your terminal
+```bash
+export STREAMINGFAST_KEY=<your api key>
+```
+3. Request and set `SUBSTREAMS_API_TOKEN`
+  ```bash
+export SUBSTREAMS_API_TOKEN=$(curl https://auth.dfuse.io/v1/auth/issue -s --data-binary '{"api_key":"'$STREAMINGFAST_KEY'"}' | jq -r .token)
+  ```
+
 
 ## Run your Substream
 
@@ -90,15 +66,16 @@ We're now ready to run our example Substream!
 
 ```bash
 # to run the map module
-substreams run -e api-dev.streamingfast.io:443 substreams.yaml map_transfers --start-block 12292922 --stop-block +1
+substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml map_transfers --start-block 12292922 --stop-block +1
 
 # to run the store module (and the map module in the background)
-substreams run -e api-dev.streamingfast.io:443 substreams.yaml store_transfers --start-block 12292922 --stop-block +1
+substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml store_transfers --start-block 12292922 --stop-block +1
 ```
+
 Let's break down everything happening above.
 
 - `substreams` is our executable
-- `-e api-dev.streamingfast.io:443` is the provider going to run our Substreams
+- `-e mainnet.eth.streamingfast.io:443` is the provider going to run our Substreams
 - `substream.yaml` is the path where we have defined our Substreams Manifest
 - `map_transfers` (or `store_transfers`) this is the module which we want to run, defined in the manifest
 - `--start-block 12292922` start from block `12292922`
@@ -108,40 +85,7 @@ Here is the example of an output of the `map_transfers` starting at `12292922` b
 The `[...]` was added to abbreviate the JSON output as there was a lot of ERC20 transfers.
 
 ```bash
-2022-05-30T11:11:22.431-0400 INFO (substreams) connecting...
-2022-05-30T11:11:22.620-0400 INFO (substreams) connected
-
 ----------- IRREVERSIBLE BLOCK #12,292,922 (12292922) ---------------
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
-map_transfers: log: NFT Contract bc4ca0eda7647a8ab7c2061c2e118a18a936f13d invoked
 map_transfers: message "eth.erc721.v1.Transfers": {
   "transfers": [
     {
@@ -162,9 +106,11 @@ map_transfers: message "eth.erc721.v1.Transfers": {
 }
 ```
 
+> Bytes are rendered with base64 encoding by default, so it might be a little troubling to see `q6cWGn+2nIjhbtn0Vc5it5HuTQM=` as an Ethereum address, but it's actually `aba7161a7fb69c88e16ed9f455ce62b791ee4d03`, you can use `string` instead of `bytes` if you prefer that in your Protobuf definitions.
+
 ## Next Steps
 
-Congratulations! You've successfully run a Substream.
+Congratulations! You've successfully run a Substreams.
 
-- Read the documentation at https://github.com/streamingfast/substreams under _Documentation_.
+- Read the documentation at https://substreams.streamingfast.io.
 - Look at [Playground](https://github.com/streamingfast/substreams-playground) for more learning examples.
