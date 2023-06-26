@@ -1,6 +1,12 @@
 # StreamingFast Substreams Template
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+## Quick Start (Locally)
+
+Use this quickstart guide to set up your environment to use Substreams locally.
+
+First, [copy this repository](https://github.com/streamingfast/substreams-template/generate) and clone it.
+
 ## Quick Start (Gitpod)
 
 Use these steps to conveniently open your repository in a Gitpod.
@@ -11,15 +17,11 @@ Use these steps to conveniently open your repository in a Gitpod.
 4. Configure a `STREAMINGFAST_KEY` variable in your Gitpod account settings
 5. Open your repository as a [Gitpod workspace](https://gitpod.io/workspaces)
 
-## Quick Start (Locally)
+## Install Dependencies & Authentication
 
-Use this quickstart guide to set up your environment to use Substreams locally.
+Follow [Installation Requirements](https://substreams.streamingfast.io/getting-started/installing-the-cli) instructions on official Substreams documentation website.
 
-First, [copy this repository](https://github.com/streamingfast/substreams-template/generate) and clone it.
-
-## Install Dependencies
-
-Follow [Installation Requirements](https://substreams.streamingfast.io/getting-started/installing-the-cli) instructions on official Substreams documentation wesite.
+Also make sure that you grabbed your StreamingFast API key and generated a Substreams API token set to environment `SUBSTREAMS_API_TOKEN`, see [authentication instructions](https://substreams.streamingfast.io/getting-started/quickstart#run-your-first-substreams) for how to do it.
 
 ### Validation
 
@@ -36,6 +38,8 @@ version (...)
 substreams protogen ./substreams.yaml --exclude-paths="sf/substreams,google"
 ```
 
+> We exclude paths that are not required to have locally.
+
 ## Compile
 
 At this point, we're ready to build our WASM binary and Protobuf definitions.
@@ -46,30 +50,14 @@ cargo build --target wasm32-unknown-unknown --release
 
 The resulting WASM artifact will be found at `./target/wasm32-unknown-unknown/release/substreams.wasm`
 
-## Get Substreams API token
-1. Grab a StreamingFast key from [https://app.streamingfast.io/](https://app.streamingfast.io/)
-2. Set `STREAMINGFAST_KEY` environment variable in your terminal
-```bash
-export STREAMINGFAST_KEY=<your api key>
-```
-3. Request and set `SUBSTREAMS_API_TOKEN`
-  ```bash
-export SUBSTREAMS_API_TOKEN=$(curl https://auth.dfuse.io/v1/auth/issue -s --data-binary '{"api_key":"'$STREAMINGFAST_KEY'"}' | jq -r .token)
-  ```
+## Run your Substreams
 
-
-## Run your Substream
-
-We're now ready to run our example Substream!
+We're now ready to run our example Substreams!
 
 > Don't forget to be at the root of the project to run the following commands
 
 ```bash
-# to run the map module
 substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml map_transfers --start-block 12292922 --stop-block +1
-
-# to run the store module (and the map module in the background)
-substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml store_transfers --start-block 12292922 --stop-block +1
 ```
 
 Let's break down everything happening above.
@@ -77,7 +65,7 @@ Let's break down everything happening above.
 - `substreams` is our executable
 - `-e mainnet.eth.streamingfast.io:443` is the provider going to run our Substreams
 - `substream.yaml` is the path where we have defined our Substreams Manifest
-- `map_transfers` (or `store_transfers`) this is the module which we want to run, defined in the manifest
+- `map_transfers` this is the module which we want to run, defined in the manifest (must be of `map` kind)
 - `--start-block 12292922` start from block `12292922`
 - `--stop-block +1` only request a single block (stop block will be manifest's start block + 1)
 
