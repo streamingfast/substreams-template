@@ -16,7 +16,7 @@ hex-literal = "0.3"
 num-bigint = "0.4"
 prost = "0.11"
 # Use latest from https://crates.io/crates/substreams
-substreams = "0.5"
+substreams = "0.5.8"
 # Use latest from https://crates.io/crates/substreams-ethereum
 substreams-ethereum = "0.9"
 
