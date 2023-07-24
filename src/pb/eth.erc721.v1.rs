@@ -8,14 +8,14 @@ pub struct Transfers {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Transfer {
-    #[prost(bytes="vec", tag="1")]
-    pub from: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bytes="vec", tag="2")]
-    pub to: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="1")]
+    pub from: ::prost::alloc::string::String,
+    #[prost(string, tag="2")]
+    pub to: ::prost::alloc::string::String,
     #[prost(uint64, tag="3")]
     pub token_id: u64,
-    #[prost(bytes="vec", tag="4")]
-    pub trx_hash: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="4")]
+    pub trx_hash: ::prost::alloc::string::String,
     #[prost(uint64, tag="5")]
     pub ordinal: u64,
 }

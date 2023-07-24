@@ -3,6 +3,9 @@ package:
   name: "substreams_template"
   version: v0.1.0
 
+imports:
+  database_change: https://github.com/streamingfast/substreams-sink-database-changes/releases/download/v1.2.0/substreams-database-change-v1.2.0.spkg
+
 protobuf:
   files:
     - erc721.proto
@@ -30,3 +33,14 @@ modules:
     valueType: int64
     inputs:
       - map: map_transfers
+
+  - name: db_out
+    kind: map
+    initialBlock: 12287507
+    inputs:
+      - source: sf.substreams.v1.Clock
+      - map: map_transfers
+      - store: store_transfers
+        mode: deltas
+    output:
+      type: proto:sf.substreams.sink.database.v1.DatabaseChanges

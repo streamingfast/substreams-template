@@ -57,7 +57,7 @@ We're now ready to run our example Substreams!
 > Don't forget to be at the root of the project to run the following commands
 
 ```bash
-substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml map_transfers --start-block 12292922 --stop-block +1
+substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml db_out --start-block 12292922 --stop-block +1
 ```
 
 Let's break down everything happening above.
@@ -65,36 +65,49 @@ Let's break down everything happening above.
 - `substreams` is our executable
 - `-e mainnet.eth.streamingfast.io:443` is the provider going to run our Substreams
 - `substream.yaml` is the path where we have defined our Substreams Manifest
-- `map_transfers` this is the module which we want to run, defined in the manifest (must be of `map` kind)
+- `db_out` this is the module which we want to run, defined in the manifest (must be of `map` kind)
 - `--start-block 12292922` start from block `12292922`
 - `--stop-block +1` only request a single block (stop block will be manifest's start block + 1)
 
-Here is the example of an output of the `map_transfers` starting at `12292922` block for only `1` block.
-The `[...]` was added to abbreviate the JSON output as there was a lot of ERC20 transfers.
+Here is the example of an output of the `map_transfers` starting at `12292922` block for only `1` block:
+
+ > **Note** Using `[...]` to abbreviate the JSON output
 
 ```bash
------------ IRREVERSIBLE BLOCK #12,292,922 (12292922) ---------------
-map_transfers: message "eth.erc721.v1.Transfers": {
-  "transfers": [
-    {
-      "from": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "to": "q6cWGn+2nIjhbtn0Vc5it5HuTQM=",
-      "trxHash": "z7GX9i7Fx/DnGhHsDEoOOUo6pB21OG6FUm+GyEs/J5Y=",
-      "ordinal": "85"
-    },
-    <continued>,
-    {
-      "from": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "to": "q6cWGn+2nIjhbtn0Vc5it5HuTQM=",
-      "tokenId": "29",
-      "trxHash": "z7GX9i7Fx/DnGhHsDEoOOUo6pB21OG6FUm+GyEs/J5Y=",
-      "ordinal": "114"
-    }
-  ]
-}
-```
+substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml db_out -s 12292922 -t +10
+Connected (trace ID fb2646fe50f1cb5430b89ea273b6a6aa)
+Progress messages received: 240 (29/sec)
+Backprocessing history up to requested target block 12292922:
+(hit 'm' to switch mode)
 
-> Bytes are rendered with base64 encoding by default, so it might be a little troubling to see `q6cWGn+2nIjhbtn0Vc5it5HuTQM=` as an Ethereum address, but it's actually `aba7161a7fb69c88e16ed9f455ce62b791ee4d03`, you can use `string` instead of `bytes` if you prefer that in your Protobuf definitions.
+store_transfers            12287507  ::  12287507-12288544 12289000-12289548 12290000-12290542 12291000-12291452 12292000-12292481
+
+# Output above will be different on your machine, what is happening is that we requested block
+# 12292922 but the `substreams.yaml` start block is 12287507 which means we have 5 415 blocks to
+# catch to build up 'store_transfers' state up to block 12292922. This is done on parallel worker
+# and the output above is displaying the advanced of the backward parallel processing.
+...
+
+# Once store reconciliation is done, you will start to receive the output of `db_out` module:
+
+----------- BLOCK #12,292,922 (e2d521d11856591b77506a383033cf85e1d46f1669321859154ab38643244293) ---------------
+{
+  "@module": "db_out",
+  "@block": 12292922,
+  "@type": "sf.substreams.sink.database.v1.DatabaseChanges",
+  "@data": {
+    "tableChanges": [
+      {
+        "table": "transfer",
+        "pk": "cfb197f62ec5c7f0e71a11ec0c4a0e394a3aa41db5386e85526f86c84b3f2796-87",
+        "operation": "OPERATION_CREATE",
+        "fields": [
+          {
+            "name": "trx_hash",
+            "newValue": "cfb197f62ec5c7f0e71a11ec0c4a0e394a3aa41db5386e85526f86c84b3f2796"
+          },
+          [...]
+```
 
 ## Next Steps
 

@@ -7,9 +7,9 @@ message Transfers {
 }
 
 message Transfer {
-  bytes from = 1;
-  bytes to = 2;
+  string from = 1;
+  string to = 2;
   uint64 token_id = 3;
-  bytes trx_hash = 4;
+  string trx_hash = 4;
   uint64 ordinal = 5;
 }

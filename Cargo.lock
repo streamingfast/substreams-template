@@ -690,9 +690,9 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "substreams"
-version = "0.5.8"
+version = "0.5.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ea94f238b54b075ad17894537bdcc20d5fc65cdc199bf1594c9ecfdc6454840"
+checksum = "dc235e40ee62791732bff9e738cba854cac5d35da9a973460ba14a50cd91cd30"
 dependencies = [
  "anyhow",
  "bigdecimal",
@@ -706,6 +706,17 @@ dependencies = [
  "prost-types",
  "substreams-macro",
  "thiserror",
+]
+
+[[package]]
+name = "substreams-database-change"
+version = "1.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ffb197c21f6b37e87fc275b29c5e330812008b995144f85d0afad36cafc846f1"
+dependencies = [
+ "prost",
+ "prost-types",
+ "substreams",
 ]
 
 [[package]]
@@ -773,9 +784,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-macro"
-version = "0.5.8"
+version = "0.5.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c9df3ebfeefa8958b1de17f7e9e80f9b1d9a78cbe9114716a872a52b60b8343"
+checksum = "dcb82228bbd07621961b1ccae0390ebf3a3b6cf0c0e3ad97e778ed81b18be504"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -794,6 +805,7 @@ dependencies = [
  "num-bigint",
  "prost",
  "substreams",
+ "substreams-database-change",
  "substreams-ethereum",
 ]
 
