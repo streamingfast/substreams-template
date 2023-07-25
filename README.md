@@ -3,7 +3,7 @@
 
 ## Quick Start (Locally)
 
-Use this quickstart guide to set up your environment to use Substreams locally.
+Use this quick start guide to set up your environment to use Substreams locally.
 
 First, [copy this repository](https://github.com/streamingfast/substreams-template/generate) and clone it.
 
@@ -29,8 +29,10 @@ Ensure that `substreams` CLI works as expected:
 
 ```
 substreams -v
-version (...)
+substreams version 1.1.9 (Commit 7ff8bd0, Built 2023-07-24T17:05:07Z)
 ```
+
+> **Note** Your version may differ.
 
 ## Generating Protobuf
 
@@ -48,6 +50,8 @@ At this point, we're ready to build our WASM binary and Protobuf definitions.
 cargo build --target wasm32-unknown-unknown --release
 ```
 
+> **Note** You can use `make build` also if you have `Make` installed.
+
 The resulting WASM artifact will be found at `./target/wasm32-unknown-unknown/release/substreams.wasm`
 
 ## Run your Substreams
@@ -59,6 +63,8 @@ We're now ready to run our example Substreams!
 ```bash
 substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml db_out --start-block 12292922 --stop-block +1
 ```
+
+> **Note** You can use `make run` also if you have `Make` installed.
 
 Let's break down everything happening above.
 
@@ -113,5 +119,4 @@ store_transfers            12287507  ::  12287507-12288544 12289000-12289548 122
 
 Congratulations! You've successfully run a Substreams.
 
-- Read the documentation at https://substreams.streamingfast.io.
-- Look at [Playground](https://github.com/streamingfast/substreams-playground) for more learning examples.
+Read the documentation at https://substreams.streamingfast.io to continue your Substreams learning.

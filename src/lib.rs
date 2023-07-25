@@ -6,7 +6,7 @@ use substreams::{key, prelude::*};
 use substreams::{log, store::StoreAddInt64, Hex};
 use substreams_database_change::pb::database::DatabaseChanges;
 use substreams_database_change::tables::Tables;
-use substreams_ethereum::pb::eth::v2 as eth;
+use substreams_ethereum::pb::sf::ethereum::r#type::v2 as eth;
 
 // Bored Ape Club Contract
 const TRACKED_CONTRACT: [u8; 20] = hex!("bc4ca0eda7647a8ab7c2061c2e118a18a936f13d");
