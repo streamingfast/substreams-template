@@ -11,6 +11,8 @@ protobuf:
     - erc721.proto
   importPaths:
     - ./proto
+  excludePaths:
+    - google
 
 binaries:
   default:
@@ -20,7 +22,7 @@ binaries:
 modules:
   - name: map_transfers
     kind: map
-    initialBlock: 12287507
+    initialBlock: 21287507
     inputs:
       - source: sf.ethereum.type.v2.Block
     output:
@@ -28,7 +30,7 @@ modules:
 
   - name: store_transfers
     kind: store
-    initialBlock: 12287507
+    initialBlock: 21287507
     updatePolicy: add
     valueType: int64
     inputs:
@@ -36,7 +38,7 @@ modules:
 
   - name: db_out
     kind: map
-    initialBlock: 12287507
+    initialBlock: 21287507
     inputs:
       - source: sf.substreams.v1.Clock
       - map: map_transfers

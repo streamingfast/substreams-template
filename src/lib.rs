@@ -1,40 +1,99 @@
 mod abi;
 mod pb;
+use anyhow::anyhow;
 use hex_literal::hex;
 use pb::eth::erc721::v1 as erc721;
 use substreams::{key, prelude::*};
 use substreams::{log, store::StoreAddInt64, Hex};
 use substreams_database_change::pb::database::DatabaseChanges;
 use substreams_database_change::tables::Tables;
+use substreams_ethereum::pb::eth::rpc::{RpcCall, RpcCalls};
 use substreams_ethereum::pb::sf::ethereum::r#type::v2 as eth;
+use substreams_ethereum::rpc::{self, eth_call};
 
 // Bored Ape Club Contract
 const TRACKED_CONTRACT: [u8; 20] = hex!("bc4ca0eda7647a8ab7c2061c2e118a18a936f13d");
+const TRACKED_TRX: [u8; 32] =
+    hex!("df1b4d2e9b4782f2792a6737407df8aba9a046bd4fc6c989d5b3080d8f822fa7");
+
+const OWNER: [u8; 19] = hex!("831e297c4b9907a576e8b7b7121fd5bee3ac63");
 
 substreams_ethereum::init!();
 
 /// Extracts transfers events from the contract
 #[substreams::handlers::map]
 fn map_transfers(blk: eth::Block) -> Result<Option<erc721::Transfers>, substreams::errors::Error> {
-    let transfers: Vec<_> = blk
-        .events::<abi::erc721::events::Transfer>(&[&TRACKED_CONTRACT])
-        .map(|(transfer, log)| {
-            substreams::log::info!("NFT Transfer seen");
+    let responses = eth_call(&RpcCalls {
+        calls: vec![RpcCall {
+            to_addr: hex!("831e297c4b9907a576e8b7b7121fd5bee3ac63").into(),
+            data: hex!("70").into(),
+        }],
+    });
 
-            erc721::Transfer {
-                trx_hash: Hex::encode(&log.receipt.transaction.hash),
-                from: Hex::encode(&transfer.from),
-                to: Hex::encode(&transfer.to),
-                token_id: transfer.token_id.to_u64(),
-                ordinal: log.block_index() as u64,
-            }
-        })
-        .collect();
-    if transfers.len() == 0 {
-        return Ok(None);
+    substreams::log::info!("Got responses: {:?}", responses);
+
+    // log::info!(
+    //     "Checking in block #{} if any balance change old/new value is None",
+    //     blk.number
+    // );
+
+    // for (i, change) in blk.balance_changes.iter().enumerate() {
+    //     if change.old_value.is_none() {
+    //         log::info!("Found a balance change with old value being None, Block balance change #{} on address {}", i, Hex(&change.address));
+    //     }
+    //     if change.new_value.is_none() {
+    //         log::info!("Found a balance change with new value being None, Block balance change #{} on address {}", i, Hex(&change.address));
+    //     }
+    // }
+
+    for trx in blk.transaction_traces.iter() {
+        if trx.hash != TRACKED_TRX {
+            continue;
+        }
+
+        if let Some(possible_price) = trx.gas_price.as_ref() {
+            let gas_price: BigInt = possible_price.into();
+            let unsigned_gas_price: String =
+                BigInt::from_unsigned_bytes_be(&possible_price.bytes).to_string();
+            let signed_gas_price: String =
+                BigInt::from_signed_bytes_be(&possible_price.bytes).to_string();
+
+            log::info!("Transaction gas price: {}", gas_price);
+            log::info!("Transaction unsigned gas price: {}", unsigned_gas_price);
+            log::info!("Transaction signed gas price: {}", signed_gas_price);
+        }
+
+        // for call in trx.calls.iter() {
+        //     for (i, change) in call.balance_changes.iter().enumerate() {
+        //         if change.old_value.is_none() {
+        //             log::info!("Found a balance change with old value being None, Block balance change #{} on address {} via trx {}", i, Hex(&change.address), Hex(&trx.hash));
+        //         }
+        //         if change.new_value.is_none() {
+        //             log::info!("Found a balance change with new value being None, Block balance change #{} on address {} via trx {}", i, Hex(&change.address), Hex(&trx.hash));
+        //         }
+        //     }
+        // }
     }
 
-    Ok(Some(erc721::Transfers { transfers }))
+    // let transfers: Vec<_> = blk
+    //     .events::<abi::erc721::events::Transfer>(&[&TRACKED_CONTRACT])
+    //     .map(|(transfer, log)| {
+    //         substreams::log::info!("NFT Transfer seen");
+
+    //         erc721::Transfer {
+    //             trx_hash: Hex::encode(&log.receipt.transaction.hash),
+    //             from: Hex::encode(&transfer.from),
+    //             to: Hex::encode(&transfer.to),
+    //             token_id: transfer.token_id.to_u64(),
+    //             ordinal: log.block_index() as u64,
+    //         }
+    //     })
+    //     .collect();
+    // if transfers.len() == 0 {
+    //     return Ok(None);
+    // }
+
+    Ok(Some(erc721::Transfers { transfers: vec![] }))
 }
 
 const NULL_ADDRESS: &str = "0000000000000000000000000000000000000000";

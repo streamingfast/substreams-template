@@ -18,5 +18,13 @@ pub struct Transfer {
     pub trx_hash: ::prost::alloc::string::String,
     #[prost(uint64, tag="5")]
     pub ordinal: u64,
+    #[prost(string, tag="6")]
+    pub extra: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TotalSupply {
+    #[prost(uint64, tag="1")]
+    pub total_supply: u64,
 }
 // @@protoc_insertion_point(module)

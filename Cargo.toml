@@ -15,13 +15,14 @@ anyhow = "1"
 ethabi = "17"
 hex-literal = "0.3"
 num-bigint = "0.4"
-prost = "0.11"
+prost = "0.13"
+prost-types = "0.13"
 # Use latest from https://crates.io/crates/substreams
-substreams = "0.5"
+substreams = "0.6"
 # Use latest from https://crates.io/crates/substreams-database-change
-substreams-database-change = "1.2"
+substreams-database-change = "2.0"
 # Use latest from https://crates.io/crates/substreams-ethereum
-substreams-ethereum = "0.9"
+substreams-ethereum = "0.10"
 
 # Required so that ethabi > ethereum-types build correctly under wasm32-unknown-unknown
 [target.wasm32-unknown-unknown.dependencies]

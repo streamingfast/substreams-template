@@ -12,4 +12,9 @@ message Transfer {
   uint64 token_id = 3;
   string trx_hash = 4;
   uint64 ordinal = 5;
+  string _extra = 6;
+}
+
+message _TotalSupply {
+  uint64 total_supply = 1;
 }
