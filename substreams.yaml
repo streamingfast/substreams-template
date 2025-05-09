@@ -11,6 +11,9 @@ protobuf:
     - erc721.proto
   importPaths:
     - ./proto
+  excludePaths:
+    - ./google
+    - ./sf/substreams
 
 binaries:
   default:

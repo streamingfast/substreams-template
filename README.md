@@ -7,21 +7,11 @@ Use this quick start guide to set up your environment to use Substreams locally.
 
 First, [copy this repository](https://github.com/streamingfast/substreams-template/generate) and clone it.
 
-## Quick Start (Gitpod)
-
-Use these steps to conveniently open your repository in a Gitpod.
-
-1. First, [copy this repository](https://github.com/streamingfast/substreams-template/generate)
-2. Grab a StreamingFast key from [https://app.streamingfast.io/](https://app.streamingfast.io/)
-3. Create a [Gitpod](https://gitpod.io) account
-4. Configure a `STREAMINGFAST_KEY` variable in your Gitpod account settings
-5. Open your repository as a [Gitpod workspace](https://gitpod.io/workspaces)
-
 ## Install Dependencies & Authentication
 
-Follow [Installation Requirements](https://substreams.streamingfast.io/getting-started/installing-the-cli) instructions on official Substreams documentation website.
+Follow [Installation Requirements](https://docs.substreams.dev/reference-material/substreams-cli/installing-the-cli) instructions on official Substreams documentation website.
 
-Also make sure that you grabbed your StreamingFast API key and generated a Substreams API token set to environment `SUBSTREAMS_API_TOKEN`, see [authentication instructions](https://substreams.streamingfast.io/getting-started/quickstart#run-your-first-substreams) for how to do it.
+Also make sure that you grabbed your StreamingFast API key and generated a Substreams API token set to environment `SUBSTREAMS_API_TOKEN`, see [authentication instructions](https://docs.substreams.dev/reference-material/substreams-cli/authentication) for how to do it.
 
 ### Validation
 
@@ -29,48 +19,28 @@ Ensure that `substreams` CLI works as expected:
 
 ```
 substreams -v
-substreams version 1.1.9 (Commit 7ff8bd0, Built 2023-07-24T17:05:07Z)
+substreams version 1.15.5 (Commit 85fbda4, Commit Date 2025-05-07T12:58:13Z)
 ```
 
 > **Note** Your version may differ.
 
-## Generating Protobuf
+### Generate, Build & Run
+
+Two simple commands:
 
 ```bash
-substreams protogen ./substreams.yaml --exclude-paths="sf/substreams,google"
+# Ensure you have SUBSTREAMS_API_TOKEN environment variable is set
+
+substreams build
+substreams run substreams-template-v0.1.0.spkg --start-block 12292922 --stop-block +1
 ```
-
-> We exclude paths that are not required to have locally.
-
-## Compile
-
-At this point, we're ready to build our WASM binary and Protobuf definitions.
-
-```bash
-cargo build --target wasm32-unknown-unknown --release
-```
-
-> **Note** You can use `make build` also if you have `Make` installed.
-
-The resulting WASM artifact will be found at `./target/wasm32-unknown-unknown/release/substreams.wasm`
-
-## Run your Substreams
-
-We're now ready to run our example Substreams!
-
-> Don't forget to be at the root of the project to run the following commands
-
-```bash
-substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml db_out --start-block 12292922 --stop-block +1
-```
-
-> **Note** You can use `make run` also if you have `Make` installed.
 
 Let's break down everything happening above.
 
 - `substreams` is our executable
-- `-e mainnet.eth.streamingfast.io:443` is the provider going to run our Substreams
-- `substream.yaml` is the path where we have defined our Substreams Manifest
+- the `build` command generates required protobuf bindings and build our Substreams Rust module into a package `substreams-template-v0.1.0.spkg`
+- `substreams-template-v0.1.0.spkg` is a compiled Substreams package, it contains your Rust code compiled down to WASM and the manifest extract from `substreams.yaml` source
+- the `run` command send your compiled Substreams package to our server to consume network [mainnet](./substreams.yaml#L51)
 - `db_out` this is the module which we want to run, defined in the manifest (must be of `map` kind)
 - `--start-block 12292922` start from block `12292922`
 - `--stop-block +1` only request a single block (stop block will be manifest's start block + 1)
@@ -80,13 +50,15 @@ Here is the example of an output of the `map_transfers` starting at `12292922` b
  > **Note** Using `[...]` to abbreviate the JSON output
 
 ```bash
-substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml db_out -s 12292922 -t +10
-Connected (trace ID fb2646fe50f1cb5430b89ea273b6a6aa)
-Progress messages received: 240 (29/sec)
+substreams run substreams-template-v0.1.0.spkg db_out --start-block 12292922 --stop-block +10
+Connected (trace ID f787f4cd6b170c0da30ce57721d80c81)
+Progress messages received: 39 (5/sec)
 Backprocessing history up to requested target block 12292922:
 (hit 'm' to switch mode)
 
-store_transfers            12287507  ::  12287507-12288544 12289000-12289548 12290000-12290542 12291000-12291452 12292000-12292481
+Stage 0: map_transfers,store_transfers
+
+stage 0 (0 jobs)           12287507  ::  12287507-12292000
 
 # Output above will be different on your machine, what is happening is that we requested block
 # 12292922 but the `substreams.yaml` start block is 12287507 which means we have 5 415 blocks to
