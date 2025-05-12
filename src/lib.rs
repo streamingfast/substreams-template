@@ -64,11 +64,11 @@ fn db_out(
 ) -> Result<DatabaseChanges, substreams::errors::Error> {
     let mut tables = Tables::new();
     for transfer in transfers.transfers {
+        let id: String = format!("{}-{}", transfer.trx_hash, transfer.ordinal);
+
         tables
-            .create_row(
-                "transfer",
-                format!("{}-{}", &transfer.trx_hash, transfer.ordinal),
-            )
+            .create_row("transfer", id.clone())
+            .set("id", id)
             .set("trx_hash", transfer.trx_hash)
             .set("from", transfer.from)
             .set("to", transfer.to)
@@ -79,9 +79,11 @@ fn db_out(
     for delta in owner_deltas.into_iter() {
         let holder = key::segment_at(&delta.key, 1);
         let contract = key::segment_at(&delta.key, 2);
+        let id: String = format!("{}-{}", contract, holder);
 
         tables
-            .create_row("owner_count", format!("{}-{}", contract, holder))
+            .upsert_row("owner_count", id.clone())
+            .set("id", id)
             .set("contract", contract)
             .set("holder", holder)
             .set("balance", delta.new_value)

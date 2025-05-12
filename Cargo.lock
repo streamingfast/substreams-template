@@ -970,8 +970,7 @@ dependencies = [
 [[package]]
 name = "substreams-database-change"
 version = "2.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06fe88d25f4c3d56fc2a92583708dc34822ea99fb3f96609f9d684f717974b27"
+source = "git+https://github.com/streamingfast/substreams-sink-database-changes.git?branch=feature%2Fupsert#cb64cdbfea72dd8cbf885c6fa2f3b564524db37e"
 dependencies = [
  "prost 0.13.5",
  "prost-types 0.13.5",

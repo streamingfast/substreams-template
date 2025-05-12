@@ -4,3 +4,4 @@
 buf.gen.yaml
 /target
 *.spkg
+/devel/data

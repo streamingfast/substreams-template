@@ -36,3 +36,6 @@ substreams-ethereum = "0.10"
 lto = true
 opt-level = 's'
 strip = "debuginfo"
+
+[patch.crates-io]
+substreams-database-change = { git = "https://github.com/streamingfast/substreams-sink-database-changes.git", branch = "feature/upsert" }

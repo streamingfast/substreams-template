@@ -5,6 +5,7 @@ package:
 
 imports:
   database_change: https://github.com/streamingfast/substreams-sink-database-changes/releases/download/v1.2.1/substreams-database-change-v1.2.1.spkg
+  sink_sql: https://github.com/streamingfast/substreams-sink-sql/releases/download/protodefs-v1.0.3/substreams-sink-sql-protodefs-v1.0.3.spkg
 
 protobuf:
   files:
@@ -49,3 +50,9 @@ modules:
       type: proto:sf.substreams.sink.database.v1.DatabaseChanges
 
 network: mainnet
+
+sink:
+   module: db_out
+   type: sf.substreams.sink.sql.v1.Service
+   config:
+      schema: "./schema.sql"
