@@ -24,7 +24,8 @@ binaries:
 modules:
   - name: map_transfers
     kind: map
-    initialBlock: 12287507
+    # Contract created at 12287507 but first meaningful block is at 12292922
+    initialBlock: 12292922
     inputs:
       - source: sf.ethereum.type.v2.Block
     output:
@@ -32,7 +33,8 @@ modules:
 
   - name: store_transfers
     kind: store
-    initialBlock: 12287507
+    # Contract created at 12287507 but first meaningful block is at 12292922
+    initialBlock: 12292922
     updatePolicy: add
     valueType: int64
     inputs:
@@ -40,7 +42,8 @@ modules:
 
   - name: db_out
     kind: map
-    initialBlock: 12287507
+    # Contract created at 12287507 but first meaningful block is at 12292922
+    initialBlock: 12292922
     inputs:
       - source: sf.substreams.v1.Clock
       - map: map_transfers
