@@ -38,4 +38,4 @@ opt-level = 's'
 strip = "debuginfo"
 
 [patch.crates-io]
-substreams-database-change = { git = "https://github.com/streamingfast/substreams-sink-database-changes.git", branch = "feature/upsert" }
+substreams-database-change = { git = "https://github.com/streamingfast/substreams-sink-database-changes.git", branch = "develop" }

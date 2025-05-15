@@ -970,7 +970,7 @@ dependencies = [
 [[package]]
 name = "substreams-database-change"
 version = "2.0.0"
-source = "git+https://github.com/streamingfast/substreams-sink-database-changes.git?branch=feature%2Fupsert#cb64cdbfea72dd8cbf885c6fa2f3b564524db37e"
+source = "git+https://github.com/streamingfast/substreams-sink-database-changes.git?branch=develop#7b7beca0c7dd5682ddaf9db27b8476726194e8da"
 dependencies = [
  "prost 0.13.5",
  "prost-types 0.13.5",
