@@ -20,7 +20,7 @@ prost-types = "0.13"
 # Use latest from https://crates.io/crates/substreams
 substreams = "0.6"
 # Use latest from https://crates.io/crates/substreams-database-change
-substreams-database-change = "2.0"
+substreams-database-change = "2.1"
 # Use latest from https://crates.io/crates/substreams-ethereum
 substreams-ethereum = "0.10"
 
@@ -36,6 +36,3 @@ substreams-ethereum = "0.10"
 lto = true
 opt-level = 's'
 strip = "debuginfo"
-
-[patch.crates-io]
-substreams-database-change = { git = "https://github.com/streamingfast/substreams-sink-database-changes.git", branch = "develop" }
