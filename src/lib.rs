@@ -64,12 +64,15 @@ fn db_out(
 ) -> Result<DatabaseChanges, substreams::errors::Error> {
     let mut tables = Tables::new();
     for transfer in transfers.transfers {
-        let id: String = format!("{}-{}", transfer.trx_hash, transfer.ordinal);
+        let id = format!(
+            "\\x{}{}",
+            transfer.trx_hash,
+            Hex(transfer.ordinal.to_be_bytes())
+        );
 
         tables
-            .create_row("transfer", id.clone())
-            .set("id", id)
-            .set("trx_hash", transfer.trx_hash)
+            .create_row("transfer", id)
+            .set("trx_hash", format!("\\x{}", transfer.trx_hash))
             .set("from", transfer.from)
             .set("to", transfer.to)
             .set("token_id", transfer.token_id)

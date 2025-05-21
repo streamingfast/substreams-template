@@ -1,7 +1,7 @@
 -- Table to store NFT transfer events
 CREATE TABLE transfer (
-    id TEXT NOT NULL,
-    trx_hash TEXT NOT NULL,
+    id bytea NOT NULL,
+    trx_hash bytea NOT NULL,
     "from" TEXT NOT NULL,
     "to" TEXT NOT NULL,
     token_id BIGINT NOT NULL,
