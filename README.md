@@ -32,14 +32,14 @@ Two simple commands:
 # Ensure you have SUBSTREAMS_API_TOKEN environment variable is set
 
 substreams build
-substreams run substreams-template-v0.1.0.spkg --start-block 12292922 --stop-block +1
+substreams run substreams-template-v0.3.1.spkg --start-block 12292922 --stop-block +1
 ```
 
 Let's break down everything happening above.
 
 - `substreams` is our executable
-- the `build` command generates required protobuf bindings and build our Substreams Rust module into a package `substreams-template-v0.1.0.spkg`
-- `substreams-template-v0.1.0.spkg` is a compiled Substreams package, it contains your Rust code compiled down to WASM and the manifest extract from `substreams.yaml` source
+- the `build` command generates required protobuf bindings and build our Substreams Rust module into a package `substreams-template-v0.3.1.spkg`
+- `substreams-template-v0.3.1.spkg` is a compiled Substreams package, it contains your Rust code compiled down to WASM and the manifest extract from `substreams.yaml` source
 - the `run` command send your compiled Substreams package to our server to consume network [mainnet](./substreams.yaml#L51)
 - `db_out` this is the module which we want to run, defined in the manifest (must be of `map` kind)
 - `--start-block 12292922` start from block `12292922`
@@ -50,7 +50,7 @@ Here is the example of an output of the `map_transfers` starting at `12292922` b
  > **Note** Using `[...]` to abbreviate the JSON output
 
 ```bash
-substreams run substreams-template-v0.1.0.spkg db_out --start-block 12292922 --stop-block +10
+substreams run substreams-template-v0.3.1.spkg db_out --start-block 12292922 --stop-block +10
 Connected (trace ID f787f4cd6b170c0da30ce57721d80c81)
 Progress messages received: 39 (5/sec)
 Backprocessing history up to requested target block 12292922:
@@ -102,13 +102,13 @@ This template has a `db_out` module that can be pushed to an `SQL` database, her
 1. Create the necessary table schema(s):
 
   ```bash
-  substreams-sink-sql setup "psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-node?sslmode=disable" substreams-template-v0.1.0.spkg
+  substreams-sink-sql setup "psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-node?sslmode=disable" substreams-template-v0.3.1.spkg
   ```
 
 1. Sink to database:
 
    ```bash
-   substreams-sink-sql run "psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-node?sslmode=disable" substreams-template-v0.1.0.spkg :+100
+   substreams-sink-sql run "psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-node?sslmode=disable" substreams-template-v0.3.1.spkg :+100
    ```
 
    > [!NOTE]

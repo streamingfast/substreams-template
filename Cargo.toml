@@ -1,6 +1,6 @@
 [package]
 name = "substreams-template"
-version = "0.1.0"
+version = "0.3.1"
 description = "Substream template demo project"
 edition = "2021"
 repository = "https://github.com/streamingfast/substreams-template"

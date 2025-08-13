@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: "substreams_template"
-  version: v0.1.0
+  version: v0.3.1
 
 imports:
   database_change: https://github.com/streamingfast/substreams-sink-database-changes/releases/download/v1.2.1/substreams-database-change-v1.2.1.spkg
