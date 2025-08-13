@@ -1,0 +1,5 @@
+global:
+  language: rust
+  variant: substreams
+release:
+  substreams-publish-team-slug: streamingfast
