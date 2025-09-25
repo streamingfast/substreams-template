@@ -93,19 +93,19 @@ This template has a `db_out` module that can be pushed to an `SQL` database, her
 
 1. Install `substreams-sink-sql` from Brew with `brew install streamingfast/tap/substreams-sink-sql` or by using the pre-built binary release [available in the releases page](https://github.com/streamingfast/substreams-sink-sql/releases) (extract `substreams-sink-sql` binary into a folder and ensure this folder is referenced globally via your `PATH` environment variable).
 
-1. Start a local development Postgres database instance an SQL viewer (`pgweb`) connected to the database an available on `http://localhost:8081`:
+2. Start a local development Postgres database instance an SQL viewer (`pgweb`) connected to the database an available on `http://localhost:8081`:
 
    ```bash
    docker compose up -d
    ```
 
-1. Create the necessary table schema(s):
+3. Create the necessary table schema(s):
 
-  ```bash
-  substreams-sink-sql setup "psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-node?sslmode=disable" substreams-template-v0.3.1.spkg
-  ```
+   ```bash
+   substreams-sink-sql setup "psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-node?sslmode=disable" substreams-template-v0.3.1.spkg
+   ```
 
-1. Sink to database:
+4. Sink to database:
 
    ```bash
    substreams-sink-sql run "psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-node?sslmode=disable" substreams-template-v0.3.1.spkg :+100
@@ -114,7 +114,7 @@ This template has a `db_out` module that can be pushed to an `SQL` database, her
    > [!NOTE]
    > Use `:` as the block range argument instead of `:+100` to sink the full chain and follow chain's head block.
 
-1. Read more at https://github.com/streamingfast/substreams-sink-sql?tab=readme-ov-file#substreamssql-sink.
+5. Read more at https://github.com/streamingfast/substreams-sink-sql?tab=readme-ov-file#substreamssql-sink.
 
 ## Next Steps
 
