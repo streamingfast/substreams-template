@@ -103,10 +103,10 @@ This template has a `db_out` module that can be pushed to an `SQL` database, her
    export DSN="psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-node?sslmode=disable"
    
    # Create the necessary table schema(s)
-   substreams-sink-sql setup $DSN substreams-template-v0.3.1.spkg
+   substreams-sink-sql setup $DSN substreams-template@v0.3.1
    
    # Sink to database
-   substreams-sink-sql run $DSN substreams-template-v0.3.1.spkg :+100
+   substreams-sink-sql run $DSN substreams-template@v0.3.1 :+100
    ```
 
    > [!NOTE]
